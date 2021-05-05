@@ -2,72 +2,60 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateTask = /* GraphQL */ `
-  subscription OnCreateTask {
-    onCreateTask {
+export const onCreateMedia = /* GraphQL */ `
+  subscription OnCreateMedia {
+    onCreateMedia {
       id
-      title
-      description
-      status
+      hint
+      language
+      media {
+        key
+        bucket
+        region
+      }
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }
   }
 `;
-export const onUpdateTask = /* GraphQL */ `
-  subscription OnUpdateTask {
-    onUpdateTask {
+export const onUpdateMedia = /* GraphQL */ `
+  subscription OnUpdateMedia {
+    onUpdateMedia {
       id
-      title
-      description
-      status
+      hint
+      language
+      media {
+        key
+        bucket
+        region
+      }
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }
   }
 `;
-export const onDeleteTask = /* GraphQL */ `
-  subscription OnDeleteTask {
-    onDeleteTask {
+export const onDeleteMedia = /* GraphQL */ `
+  subscription OnDeleteMedia {
+    onDeleteMedia {
       id
-      title
-      description
-      status
+      hint
+      language
+      media {
+        key
+        bucket
+        region
+      }
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
-    }
-  }
-`;
-export const onCreatePrivateNote = /* GraphQL */ `
-  subscription OnCreatePrivateNote($owner: String!) {
-    onCreatePrivateNote(owner: $owner) {
-      id
-      content
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onUpdatePrivateNote = /* GraphQL */ `
-  subscription OnUpdatePrivateNote($owner: String!) {
-    onUpdatePrivateNote(owner: $owner) {
-      id
-      content
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onDeletePrivateNote = /* GraphQL */ `
-  subscription OnDeletePrivateNote($owner: String!) {
-    onDeletePrivateNote(owner: $owner) {
-      id
-      content
-      createdAt
-      updatedAt
-      owner
     }
   }
 `;

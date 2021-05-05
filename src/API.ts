@@ -2,20 +2,26 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreateTaskInput = {
+export type CreateMediaInput = {
   id?: string | null,
-  title: string,
-  description?: string | null,
-  status?: string | null,
+  hint: string,
+  language: string,
+  media: S3ObjectInput,
+  _version?: number | null,
 };
 
-export type ModelTaskConditionInput = {
-  title?: ModelStringInput | null,
-  description?: ModelStringInput | null,
-  status?: ModelStringInput | null,
-  and?: Array< ModelTaskConditionInput | null > | null,
-  or?: Array< ModelTaskConditionInput | null > | null,
-  not?: ModelTaskConditionInput | null,
+export type S3ObjectInput = {
+  key: string,
+  bucket: string,
+  region: string,
+};
+
+export type ModelMediaConditionInput = {
+  hint?: ModelStringInput | null,
+  language?: ModelStringInput | null,
+  and?: Array< ModelMediaConditionInput | null > | null,
+  or?: Array< ModelMediaConditionInput | null > | null,
+  not?: ModelMediaConditionInput | null,
 };
 
 export type ModelStringInput = {
@@ -58,65 +64,46 @@ export type ModelSizeInput = {
   between?: Array< number | null > | null,
 };
 
-export type Task = {
-  __typename: "Task",
+export type Media = {
+  __typename: "Media",
   id?: string,
-  title?: string,
-  description?: string | null,
-  status?: string | null,
+  hint?: string,
+  language?: string,
+  media?: S3Object,
+  _version?: number,
+  _deleted?: boolean | null,
+  _lastChangedAt?: number,
   createdAt?: string,
   updatedAt?: string,
 };
 
-export type UpdateTaskInput = {
+export type S3Object = {
+  __typename: "S3Object",
+  key?: string,
+  bucket?: string,
+  region?: string,
+};
+
+export type UpdateMediaInput = {
   id: string,
-  title?: string | null,
-  description?: string | null,
-  status?: string | null,
+  hint?: string | null,
+  language?: string | null,
+  media?: S3ObjectInput | null,
+  _version?: number | null,
 };
 
-export type DeleteTaskInput = {
+export type DeleteMediaInput = {
   id?: string | null,
+  _version?: number | null,
 };
 
-export type CreatePrivateNoteInput = {
-  id?: string | null,
-  content: string,
-};
-
-export type ModelPrivateNoteConditionInput = {
-  content?: ModelStringInput | null,
-  and?: Array< ModelPrivateNoteConditionInput | null > | null,
-  or?: Array< ModelPrivateNoteConditionInput | null > | null,
-  not?: ModelPrivateNoteConditionInput | null,
-};
-
-export type PrivateNote = {
-  __typename: "PrivateNote",
-  id?: string,
-  content?: string,
-  createdAt?: string,
-  updatedAt?: string,
-  owner?: string | null,
-};
-
-export type UpdatePrivateNoteInput = {
-  id: string,
-  content?: string | null,
-};
-
-export type DeletePrivateNoteInput = {
-  id?: string | null,
-};
-
-export type ModelTaskFilterInput = {
+export type ModelMediaFilterInput = {
   id?: ModelIDInput | null,
-  title?: ModelStringInput | null,
-  description?: ModelStringInput | null,
-  status?: ModelStringInput | null,
-  and?: Array< ModelTaskFilterInput | null > | null,
-  or?: Array< ModelTaskFilterInput | null > | null,
-  not?: ModelTaskFilterInput | null,
+  hint?: ModelStringInput | null,
+  language?: ModelStringInput | null,
+  and?: Array< ModelMediaFilterInput | null > | null,
+  or?: Array< ModelMediaFilterInput | null > | null,
+  not?: ModelMediaFilterInput | null,
 };
 
 export type ModelIDInput = {
@@ -135,276 +122,219 @@ export type ModelIDInput = {
   size?: ModelSizeInput | null,
 };
 
-export type ModelTaskConnection = {
-  __typename: "ModelTaskConnection",
-  items?:  Array<Task | null > | null,
+export type ModelMediaConnection = {
+  __typename: "ModelMediaConnection",
+  items?:  Array<Media | null > | null,
   nextToken?: string | null,
+  startedAt?: number | null,
 };
 
-export type ModelPrivateNoteFilterInput = {
-  id?: ModelIDInput | null,
-  content?: ModelStringInput | null,
-  and?: Array< ModelPrivateNoteFilterInput | null > | null,
-  or?: Array< ModelPrivateNoteFilterInput | null > | null,
-  not?: ModelPrivateNoteFilterInput | null,
+export type CreateMediaMutationVariables = {
+  input?: CreateMediaInput,
+  condition?: ModelMediaConditionInput | null,
 };
 
-export type ModelPrivateNoteConnection = {
-  __typename: "ModelPrivateNoteConnection",
-  items?:  Array<PrivateNote | null > | null,
-  nextToken?: string | null,
-};
-
-export type CreateTaskMutationVariables = {
-  input?: CreateTaskInput,
-  condition?: ModelTaskConditionInput | null,
-};
-
-export type CreateTaskMutation = {
-  createTask?:  {
-    __typename: "Task",
+export type CreateMediaMutation = {
+  createMedia?:  {
+    __typename: "Media",
     id: string,
-    title: string,
-    description?: string | null,
-    status?: string | null,
+    hint: string,
+    language: string,
+    media:  {
+      __typename: "S3Object",
+      key: string,
+      bucket: string,
+      region: string,
+    },
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type UpdateTaskMutationVariables = {
-  input?: UpdateTaskInput,
-  condition?: ModelTaskConditionInput | null,
+export type UpdateMediaMutationVariables = {
+  input?: UpdateMediaInput,
+  condition?: ModelMediaConditionInput | null,
 };
 
-export type UpdateTaskMutation = {
-  updateTask?:  {
-    __typename: "Task",
+export type UpdateMediaMutation = {
+  updateMedia?:  {
+    __typename: "Media",
     id: string,
-    title: string,
-    description?: string | null,
-    status?: string | null,
+    hint: string,
+    language: string,
+    media:  {
+      __typename: "S3Object",
+      key: string,
+      bucket: string,
+      region: string,
+    },
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type DeleteTaskMutationVariables = {
-  input?: DeleteTaskInput,
-  condition?: ModelTaskConditionInput | null,
+export type DeleteMediaMutationVariables = {
+  input?: DeleteMediaInput,
+  condition?: ModelMediaConditionInput | null,
 };
 
-export type DeleteTaskMutation = {
-  deleteTask?:  {
-    __typename: "Task",
+export type DeleteMediaMutation = {
+  deleteMedia?:  {
+    __typename: "Media",
     id: string,
-    title: string,
-    description?: string | null,
-    status?: string | null,
+    hint: string,
+    language: string,
+    media:  {
+      __typename: "S3Object",
+      key: string,
+      bucket: string,
+      region: string,
+    },
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type CreatePrivateNoteMutationVariables = {
-  input?: CreatePrivateNoteInput,
-  condition?: ModelPrivateNoteConditionInput | null,
-};
-
-export type CreatePrivateNoteMutation = {
-  createPrivateNote?:  {
-    __typename: "PrivateNote",
-    id: string,
-    content: string,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type UpdatePrivateNoteMutationVariables = {
-  input?: UpdatePrivateNoteInput,
-  condition?: ModelPrivateNoteConditionInput | null,
-};
-
-export type UpdatePrivateNoteMutation = {
-  updatePrivateNote?:  {
-    __typename: "PrivateNote",
-    id: string,
-    content: string,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type DeletePrivateNoteMutationVariables = {
-  input?: DeletePrivateNoteInput,
-  condition?: ModelPrivateNoteConditionInput | null,
-};
-
-export type DeletePrivateNoteMutation = {
-  deletePrivateNote?:  {
-    __typename: "PrivateNote",
-    id: string,
-    content: string,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type GetTaskQueryVariables = {
-  id?: string,
-};
-
-export type GetTaskQuery = {
-  getTask?:  {
-    __typename: "Task",
-    id: string,
-    title: string,
-    description?: string | null,
-    status?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListTasksQueryVariables = {
-  filter?: ModelTaskFilterInput | null,
+export type SyncMediaQueryVariables = {
+  filter?: ModelMediaFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
+  lastSync?: number | null,
 };
 
-export type ListTasksQuery = {
-  listTasks?:  {
-    __typename: "ModelTaskConnection",
+export type SyncMediaQuery = {
+  syncMedia?:  {
+    __typename: "ModelMediaConnection",
     items?:  Array< {
-      __typename: "Task",
+      __typename: "Media",
       id: string,
-      title: string,
-      description?: string | null,
-      status?: string | null,
+      hint: string,
+      language: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
     nextToken?: string | null,
+    startedAt?: number | null,
   } | null,
 };
 
-export type GetPrivateNoteQueryVariables = {
+export type GetMediaQueryVariables = {
   id?: string,
 };
 
-export type GetPrivateNoteQuery = {
-  getPrivateNote?:  {
-    __typename: "PrivateNote",
+export type GetMediaQuery = {
+  getMedia?:  {
+    __typename: "Media",
     id: string,
-    content: string,
+    hint: string,
+    language: string,
+    media:  {
+      __typename: "S3Object",
+      key: string,
+      bucket: string,
+      region: string,
+    },
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
-export type ListPrivateNotesQueryVariables = {
-  filter?: ModelPrivateNoteFilterInput | null,
+export type ListMediasQueryVariables = {
+  filter?: ModelMediaFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
 };
 
-export type ListPrivateNotesQuery = {
-  listPrivateNotes?:  {
-    __typename: "ModelPrivateNoteConnection",
+export type ListMediasQuery = {
+  listMedias?:  {
+    __typename: "ModelMediaConnection",
     items?:  Array< {
-      __typename: "PrivateNote",
+      __typename: "Media",
       id: string,
-      content: string,
+      hint: string,
+      language: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
+    startedAt?: number | null,
   } | null,
 };
 
-export type OnCreateTaskSubscription = {
-  onCreateTask?:  {
-    __typename: "Task",
+export type OnCreateMediaSubscription = {
+  onCreateMedia?:  {
+    __typename: "Media",
     id: string,
-    title: string,
-    description?: string | null,
-    status?: string | null,
+    hint: string,
+    language: string,
+    media:  {
+      __typename: "S3Object",
+      key: string,
+      bucket: string,
+      region: string,
+    },
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnUpdateTaskSubscription = {
-  onUpdateTask?:  {
-    __typename: "Task",
+export type OnUpdateMediaSubscription = {
+  onUpdateMedia?:  {
+    __typename: "Media",
     id: string,
-    title: string,
-    description?: string | null,
-    status?: string | null,
+    hint: string,
+    language: string,
+    media:  {
+      __typename: "S3Object",
+      key: string,
+      bucket: string,
+      region: string,
+    },
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnDeleteTaskSubscription = {
-  onDeleteTask?:  {
-    __typename: "Task",
+export type OnDeleteMediaSubscription = {
+  onDeleteMedia?:  {
+    __typename: "Media",
     id: string,
-    title: string,
-    description?: string | null,
-    status?: string | null,
+    hint: string,
+    language: string,
+    media:  {
+      __typename: "S3Object",
+      key: string,
+      bucket: string,
+      region: string,
+    },
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
     createdAt: string,
     updatedAt: string,
-  } | null,
-};
-
-export type OnCreatePrivateNoteSubscriptionVariables = {
-  owner?: string,
-};
-
-export type OnCreatePrivateNoteSubscription = {
-  onCreatePrivateNote?:  {
-    __typename: "PrivateNote",
-    id: string,
-    content: string,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type OnUpdatePrivateNoteSubscriptionVariables = {
-  owner?: string,
-};
-
-export type OnUpdatePrivateNoteSubscription = {
-  onUpdatePrivateNote?:  {
-    __typename: "PrivateNote",
-    id: string,
-    content: string,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type OnDeletePrivateNoteSubscriptionVariables = {
-  owner?: string,
-};
-
-export type OnDeletePrivateNoteSubscription = {
-  onDeletePrivateNote?:  {
-    __typename: "PrivateNote",
-    id: string,
-    content: string,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
   } | null,
 };

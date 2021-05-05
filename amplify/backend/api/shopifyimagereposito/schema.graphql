@@ -1,6 +1,7 @@
 type Media @model {
   id: ID!
   hint: String!
+  language: String!
   media: S3Object!
 }
 

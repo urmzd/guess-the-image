@@ -11,10 +11,6 @@
     "media": {
       "service": "S3",
       "providerPlugin": "awscloudformation"
-    },
-    "dynamo3db00e75": {
-      "service": "DynamoDB",
-      "providerPlugin": "awscloudformation"
     }
   },
   "api": {
@@ -35,25 +31,13 @@
       }
     }
   },
-  "function": {
-    "createMedia": {
-      "build": true,
+  "function": {},
+  "predictions": {
+    "textIdentifier": {
       "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "storage",
-          "resourceName": "dynamo3db00e75",
-          "attributes": [
-            "Name",
-            "Arn"
-          ],
-          "attributeEnvMap": {
-            "Name": "TABLE_NAME",
-            "Arn": "TABLE_ARN"
-          }
-        }
-      ]
+      "service": "Rekognition",
+      "dependsOn": [],
+      "identifyType": "identifyText"
     }
   }
 }
