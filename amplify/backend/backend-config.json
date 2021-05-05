@@ -17,7 +17,24 @@
       "providerPlugin": "awscloudformation"
     }
   },
-  "api": {},
+  "api": {
+    "shopifyimagereposito": {
+      "service": "AppSync",
+      "providerPlugin": "awscloudformation",
+      "output": {
+        "authConfig": {
+          "defaultAuthentication": {
+            "authenticationType": "API_KEY",
+            "apiKeyConfig": {
+              "apiKeyExpirationDays": 30,
+              "description": "api-key"
+            }
+          },
+          "additionalAuthenticationProviders": []
+        }
+      }
+    }
+  },
   "function": {
     "createMedia": {
       "build": true,
