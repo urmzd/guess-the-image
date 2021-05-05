@@ -11,23 +11,32 @@
     "media": {
       "service": "S3",
       "providerPlugin": "awscloudformation"
+    },
+    "dynamo3db00e75": {
+      "service": "DynamoDB",
+      "providerPlugin": "awscloudformation"
     }
   },
-  "api": {
-    "graphAPI": {
-      "service": "AppSync",
+  "api": {},
+  "function": {
+    "createMedia": {
+      "build": true,
       "providerPlugin": "awscloudformation",
-      "output": {
-        "authConfig": {
-          "defaultAuthentication": {
-            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
-            "userPoolConfig": {
-              "userPoolId": "authshopifyimagereposito450f8e19"
-            }
-          },
-          "additionalAuthenticationProviders": []
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "storage",
+          "resourceName": "dynamo3db00e75",
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "attributeEnvMap": {
+            "Name": "TABLE_NAME",
+            "Arn": "TABLE_ARN"
+          }
         }
-      }
+      ]
     }
   }
 }
