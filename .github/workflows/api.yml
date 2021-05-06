@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [prepare]
     steps:
-      - run: aws secretsmanager get-secret-value --secret-id ${{env.GOOGLE_CLOUD_SECRET_NAME}} | jq -r '.SecretString' > google-service-credentials.json
+      - run: aws secretsmanager get-secret-value --secret-id ${{secrets.GOOGLE_CLOUD_SECRET_NAME}} | jq -r '.SecretString' > google-service-credentials.json
       - run: mv google-service-credentials.json ./api
       - run: npm install
 
