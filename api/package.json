@@ -19,7 +19,8 @@
     "typescript": "^4.2.4"
   },
   "scripts": {
-    "start": "sls offline"
+    "start": "sls offline",
+    "deploy": "sls deploy"
   },
   "author": "Urmzd Mukhammadnaim",
   "license": "ISC"
