@@ -20,11 +20,11 @@ jobs:
       - run: aws secretsmanager get-secret-value --secret-id ${{secrets.GOOGLE_CLOUD_SECRET_NAME}} | jq -r '.SecretString' > google-service-credentials.json
       - run: mv google-service-credentials.json ./api
       - run: npm install
-        working-directory: './api.yml'
+        working-directory: './api'
 
   deploy:
     runs-on: ubuntu-latest
     needs: [prepare, post-prepare]
     steps:
       - run: npx sls deploy
-        working-directory: './api.yml'
+        working-directory: './api'
