@@ -1,0 +1,99 @@
+{
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-shopifyimagereposito-dev-233350-authRole",
+      "UnauthRoleArn": "arn:aws:iam::746199276778:role/amplify-shopifyimagereposito-dev-233350-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::746199276778:role/amplify-shopifyimagereposito-dev-233350-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-shopifyimagereposito-dev-233350-deployment",
+      "UnauthRoleName": "amplify-shopifyimagereposito-dev-233350-unauthRole",
+      "StackName": "amplify-shopifyimagereposito-dev-233350",
+      "StackId": "arn:aws:cloudformation:us-east-1:746199276778:stack/amplify-shopifyimagereposito-dev-233350/54c47b40-ad4a-11eb-a487-0e46b6c7c4a3",
+      "AmplifyAppId": "d229tpf6rzx78l"
+    }
+  },
+  "auth": {
+    "shopifyimagereposito450f8e19": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false,
+      "output": {
+        "UserPoolId": "us-east-1_rNd41sjum",
+        "AppClientIDWeb": "22c6mto1387dmhodrt21m0fhps",
+        "AppClientID": "2ea3el41ltfhk4j0kmcka39r7e",
+        "IdentityPoolId": "us-east-1:17bb9c1e-61df-478a-8870-bc786dad0189",
+        "IdentityPoolName": "shopifyimagereposito450f8e19_identitypool_450f8e19__dev",
+        "UserPoolName": "shopifyimagereposito450f8e19_userpool_450f8e19"
+      },
+      "lastPushTimeStamp": "2021-05-06T00:01:50.462Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-shopifyimagereposito-dev-233350-deployment/amplify-cfn-templates/auth/shopifyimagereposito450f8e19-cloudformation-template.yml",
+        "logicalId": "authshopifyimagereposito450f8e19"
+      },
+      "lastPushDirHash": "OAgQb4wYVOVCjxInlEX3c3+dUac="
+    }
+  },
+  "storage": {
+    "media": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation",
+      "output": {
+        "BucketName": "media233350-dev",
+        "Region": "us-east-1"
+      },
+      "lastPushTimeStamp": "2021-05-06T00:01:50.462Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-shopifyimagereposito-dev-233350-deployment/amplify-cfn-templates/storage/s3-cloudformation-template.json",
+        "logicalId": "storagemedia"
+      },
+      "lastPushDirHash": "zQ3HunNMpw2ENaDeaY3g8iV3TlU="
+    }
+  },
+  "api": {
+    "shopifyimagereposito": {
+      "service": "AppSync",
+      "providerPlugin": "awscloudformation",
+      "output": {
+        "authConfig": {
+          "defaultAuthentication": {
+            "authenticationType": "API_KEY",
+            "apiKeyConfig": {
+              "apiKeyExpirationDays": 30,
+              "description": "api-key"
+            }
+          },
+          "additionalAuthenticationProviders": []
+        },
+        "GraphQLAPIIdOutput": "dumjkrwpcjalrchdogvu3kh5de",
+        "GraphQLAPIEndpointOutput": "https://bygsqzy2grggjojolfq5zy5jqu.appsync-api.us-east-1.amazonaws.com/graphql",
+        "GraphQLAPIKeyOutput": "da2-5apnilcplndh5m5mtnc7pid4ne"
+      },
+      "lastPushTimeStamp": "2021-05-06T00:01:50.462Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-shopifyimagereposito-dev-233350-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+        "logicalId": "apishopifyimagereposito"
+      },
+      "lastPushDirHash": "JxjrnfWvq93jP3qZNia5oqrXsT8="
+    }
+  },
+  "function": {},
+  "predictions": {
+    "textIdentifier": {
+      "providerPlugin": "awscloudformation",
+      "service": "Rekognition",
+      "dependsOn": [],
+      "identifyType": "identifyText",
+      "output": {
+        "format": "PLAIN",
+        "region": "us-east-1"
+      },
+      "lastPushTimeStamp": "2021-05-06T00:01:50.462Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-shopifyimagereposito-dev-233350-deployment/amplify-cfn-templates/predictions/textIdentifier-template.json",
+        "logicalId": "predictionstextIdentifier"
+      },
+      "lastPushDirHash": "4KRs0NtJq0ZPpCITOghUFtx19BU="
+    }
+  }
+}

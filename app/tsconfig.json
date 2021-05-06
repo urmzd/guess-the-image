@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "lib": ["ESNext", "ES2020", "DOM"],
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "react-jsx"
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
+}

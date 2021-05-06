@@ -1,0 +1,43 @@
+{
+  "name": "shopify-image-repository",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shopify Image Repository",
+  "author": "Urmzd",
+  "keywords": [
+    "gatsby"
+  ],
+  "scripts": {
+    "develop": "gatsby develop",
+    "start": "gatsby develop",
+    "build": "gatsby build",
+    "serve": "gatsby serve",
+    "clean": "gatsby clean"
+  },
+  "dependencies": {
+    "@google-cloud/vision": "^2.3.1",
+    "aws-amplify": "^3.3.27",
+    "fs": "0.0.1-security",
+    "gatsby": "^3.4.0",
+    "graphql": "^15.5.0",
+    "net": "^1.0.2",
+    "node-polyfill-webpack-plugin": "^1.1.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "tls": "0.0.1",
+    "utils": "^0.3.1"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.12.0",
+    "@testing-library/react": "^11.2.6",
+    "@types/aws-sdk": "^2.7.0",
+    "@typescript-eslint/eslint-plugin": "^4.22.1",
+    "@typescript-eslint/parser": "^4.22.1",
+    "eslint": "^7.25.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-react": "^7.23.2",
+    "prettier": "^2.2.1",
+    "typescript": "^4.2.4"
+  }
+}
