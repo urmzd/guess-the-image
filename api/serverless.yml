@@ -1,6 +1,9 @@
 service: api
 frameworkVersion: "2"
 
+package:
+  individually: true
+
 provider:
   name: aws
   runtime: nodejs14.x
@@ -9,13 +12,15 @@ provider:
 functions:
   getLanguage:
     handler: get-language.handler
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: "./google-service-credentials.json"
     events:
       - http:
           path: language
           method: get
           request:
             querystrings:
-              uri: true
+              uri: false
 
 plugins:
   - serverless-plugin-typescript

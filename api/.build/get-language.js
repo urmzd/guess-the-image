@@ -36,10 +36,40 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handler = void 0;
+exports.handler = exports.getApiGatewayResponse = exports.HttpStatusCodes = void 0;
+var vision_1 = require("@google-cloud/vision");
+var imageAnnotatorClient = new vision_1.ImageAnnotatorClient();
+var HttpStatusCodes;
+(function (HttpStatusCodes) {
+    HttpStatusCodes[HttpStatusCodes["OK"] = 200] = "OK";
+    HttpStatusCodes[HttpStatusCodes["BAD_REQUEST"] = 400] = "BAD_REQUEST";
+    HttpStatusCodes[HttpStatusCodes["INTERNAL_SERVER_ERROR"] = 500] = "INTERNAL_SERVER_ERROR";
+})(HttpStatusCodes = exports.HttpStatusCodes || (exports.HttpStatusCodes = {}));
+var getApiGatewayResponse = function (statusCode, args) { return ({
+    statusCode: statusCode,
+    body: args ? JSON.stringify(args) : "",
+}); };
+exports.getApiGatewayResponse = getApiGatewayResponse;
 var handler = function (event) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        return [2 /*return*/, { message: "hi" }];
+    var uri, languageCode, error_1;
+    var _a, _b, _c, _d, _e, _f, _g;
+    return __generator(this, function (_h) {
+        switch (_h.label) {
+            case 0:
+                if (!event.queryStringParameters) return [3 /*break*/, 4];
+                uri = event.queryStringParameters.uri;
+                _h.label = 1;
+            case 1:
+                _h.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, imageAnnotatorClient.textDetection(uri)];
+            case 2:
+                languageCode = ((_g = (_f = (_e = (_d = (_c = (_b = (_a = (_h.sent())) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.fullTextAnnotation) === null || _c === void 0 ? void 0 : _c.pages) === null || _d === void 0 ? void 0 : _d[0]) === null || _e === void 0 ? void 0 : _e.property) === null || _f === void 0 ? void 0 : _f.detectedLanguages) === null || _g === void 0 ? void 0 : _g[0]).languageCode;
+                return [2 /*return*/, exports.getApiGatewayResponse(HttpStatusCodes.OK, { languageCode: languageCode })];
+            case 3:
+                error_1 = _h.sent();
+                return [2 /*return*/, exports.getApiGatewayResponse(HttpStatusCodes.INTERNAL_SERVER_ERROR, error_1)];
+            case 4: return [2 /*return*/, exports.getApiGatewayResponse(HttpStatusCodes.BAD_REQUEST)];
+        }
     });
 }); };
 exports.handler = handler;

@@ -1,0 +1,9 @@
+# NPM Files
+node_modules
+
+# Serverless Files
+.serverless
+.build
+
+# GCP Files
+google-service-credentials.json
