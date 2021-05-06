@@ -12,6 +12,8 @@ provider:
 functions:
   getLanguage:
     handler: get-language.handler
+    patterns:
+      - google-service-credentials.json
     environment:
       GOOGLE_APPLICATION_CREDENTIALS: "./google-service-credentials.json"
     events:
