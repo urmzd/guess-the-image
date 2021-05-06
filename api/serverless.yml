@@ -1,0 +1,22 @@
+service: api
+frameworkVersion: "2"
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  lambdaHashingVersion: 20201221
+
+functions:
+  getLanguage:
+    handler: get-language.handler
+    events:
+      - http:
+          path: language
+          method: get
+          request:
+            querystrings:
+              uri: true
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
