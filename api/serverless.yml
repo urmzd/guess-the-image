@@ -11,7 +11,7 @@ provider:
 
 functions:
   getLanguage:
-    handler: get-language.handler
+    handler: src/get-language.handler
     patterns:
       - google-service-credentials.json
     environment:
