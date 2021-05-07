@@ -1,6 +1,9 @@
 service: api
 frameworkVersion: "2"
 
+custom:
+  webpack:
+    webpackConfig: "./web"
 package:
   individually: true
 
@@ -14,6 +17,7 @@ functions:
     handler: src/get-language.handler
     package:
       patterns:
+        - "*.json"
         - google-service-credentials.json
     environment:
       GOOGLE_APPLICATION_CREDENTIALS: "./google-service-credentials.json"
