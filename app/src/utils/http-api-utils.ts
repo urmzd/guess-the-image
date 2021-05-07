@@ -1,4 +1,4 @@
-export const getLanguageCode = async (uri: string) => {
+export const getLanguageCode = async (uri: string | null[]) => {
   const queryParameters = new URLSearchParams({ uri });
   try {
     const response = await fetch(
