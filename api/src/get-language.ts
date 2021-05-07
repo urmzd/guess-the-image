@@ -1,6 +1,6 @@
 import { ImageAnnotatorClient } from "@google-cloud/vision";
 import { APIGatewayProxyHandler } from "aws-lambda";
-import { GetLanguageQueryParameters, LanguageCodeOrNull } from "types";
+import { GetLanguageQueryParameters, LanguageCodeOrNullList} from "types";
 
 const imageAnnotatorClient = new ImageAnnotatorClient();
 
@@ -32,7 +32,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       imageAnnotatorClient.textDetection(uri)
     );
 
-    const languageCodes: LanguageCodeOrNull[] = (
+    const languageCodes: LanguageCodeOrNullList = (
       await Promise.all(languageCodePromises)
     )
       .map(
