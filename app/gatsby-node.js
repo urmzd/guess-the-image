@@ -1,5 +1,3 @@
-const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
-
 exports.onCreateWebpackConfig = ({ actions, plugins, target, resolve }) => {
   actions.setWebpackConfig({
     resolve: {
@@ -12,6 +10,5 @@ exports.onCreateWebpackConfig = ({ actions, plugins, target, resolve }) => {
       },
     },
     target: "node",
-    plugins: [new NodePolyfillPlugin()],
   });
 };
