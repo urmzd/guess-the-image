@@ -1,24 +1,18 @@
 service: api
 frameworkVersion: "2"
 
-custom:
-  webpack:
-    webpackConfig: "./web"
 package:
   individually: true
+  include:
+    - "./google-service-credentials.json"
 
 provider:
   name: aws
   runtime: nodejs14.x
-  lambdaHashingVersion: 20201221
 
 functions:
   getLanguage:
     handler: src/get-language.handler
-    package:
-      patterns:
-        - "*.json"
-        - google-service-credentials.json
     environment:
       GOOGLE_APPLICATION_CREDENTIALS: "./google-service-credentials.json"
     events:
@@ -32,5 +26,5 @@ functions:
                 uri: false
 
 plugins:
-  - serverless-plugin-typescript
   - serverless-offline
+  - serverless-plugin-typescript

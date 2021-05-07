@@ -34,8 +34,5 @@ jobs:
           path: ./api
       - run: npm install
         working-directory: ./api
-      - run: npm run package
-        working-directory: ./api
-      - run: zip -ur ./api/.serverless/getLanguage.zip ./api/google-service-credentials.json
       - run: npm run deploy
         working-directory: ./api
