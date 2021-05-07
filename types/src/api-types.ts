@@ -7,5 +7,5 @@ export type GetLanguageQueryParameters = {
 }
 
 export type GetLanguageResponse = {
-  languageCodes: LanguageCodeOrNull[]
+  languageCodes: LanguageCodeOrNullList
 }

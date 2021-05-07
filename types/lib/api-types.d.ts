@@ -5,5 +5,5 @@ export declare type GetLanguageQueryParameters = {
     uris: UriList;
 };
 export declare type GetLanguageResponse = {
-    languageCodes: LanguageCodeOrNull[];
+    languageCodes: LanguageCodeOrNullList;
 };
