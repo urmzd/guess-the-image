@@ -1,5 +1,9 @@
 name: api-deploy
-on: [push]
+on: 
+  push:
+    paths:
+      - ".github/**"
+      - "api/**"
 jobs:
   build:
     runs-on: ubuntu-latest
