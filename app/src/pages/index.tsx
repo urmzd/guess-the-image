@@ -51,6 +51,7 @@ const IndexPageSubContainerWrapper = ({
   hovering,
   setHovering,
   children,
+  onClick,
 }: IndexPageSubContainerWrapperProps) => (
   <Grid
     container
@@ -60,6 +61,7 @@ const IndexPageSubContainerWrapper = ({
     style={SubContainerStyles(hovering)}
     onMouseLeave={() => setHovering(false)}
     onMouseEnter={() => setHovering(true)}
+    onClick={onClick}
   >
     <CustomIconButton hovering={hovering}>{children}</CustomIconButton>
   </Grid>
@@ -111,15 +113,19 @@ const IndexPage = () => {
       justify="space-evenly"
     >
       {containers
-        .map(({ key, ...container }) =>
-          "divider" in container ? (
-            <Divider />
-          ) : (
-            <IndexPageSubContainerWrapper {...container} />
-          )
-        )
-        .map((element) => (
-          <Grid item>{element}</Grid>
+        .map(({ key, ...container }) => ({
+          key,
+          children:
+            "divider" in container ? (
+              <Divider />
+            ) : (
+              <IndexPageSubContainerWrapper {...container} />
+            ),
+        }))
+        .map(({ key, children }) => (
+          <Grid item key={key}>
+            {children}
+          </Grid>
         ))}
     </Grid>
   );
