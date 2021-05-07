@@ -1,5 +1,6 @@
-export const getLanguageCode = async (uri: string | null[]) => {
-  const queryParameters = new URLSearchParams({ uri });
+import { GetLanguageResponse, UriList } from "types";
+export const getLanguageCode = async (uris: UriList) => {
+  const queryParameters = new URLSearchParams(uris.map((uri) => ["uris", uri]));
   try {
     const response = await fetch(
       `${process.env.GATSBY_API_ENDPOINT}${
@@ -8,13 +9,9 @@ export const getLanguageCode = async (uri: string | null[]) => {
       { headers: { "x-api-key": process.env.GATSBY_API_KEY } }
     );
 
-    const { languageCode }: { languageCode: string } = await response.json();
+    const { languageCodes }: GetLanguageResponse = await response.json();
 
-    if (languageCode !== "und") {
-      return languageCode;
-    }
-
-    return undefined;
+    return languageCodes;
   } catch (error) {
     throw new Error(error);
   }
