@@ -1,6 +1,6 @@
 import { ImageAnnotatorClient } from "@google-cloud/vision";
 import { APIGatewayProxyHandler } from "aws-lambda";
-import { GetLanguageQueryParameters, LanguageCodeOrNullList} from "types";
+import { GetLanguageQueryParameters, LanguageCodeOrNullList } from "types";
 
 const imageAnnotatorClient = new ImageAnnotatorClient();
 
@@ -16,6 +16,9 @@ export const getApiGatewayResponse = (
 ) => ({
   statusCode,
   body: args ? JSON.stringify(args) : "{}",
+  headers: {
+    "Access-Control-Allow-Origin": "*",
+  },
 });
 
 export const handler: APIGatewayProxyHandler = async (event) => {
