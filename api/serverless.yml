@@ -12,17 +12,20 @@ provider:
 functions:
   getLanguage:
     handler: src/get-language.handler
-    patterns:
-      - google-service-credentials.json
+    package:
+      patterns:
+        - google-service-credentials.json
     environment:
       GOOGLE_APPLICATION_CREDENTIALS: "./google-service-credentials.json"
     events:
       - http:
           path: language
           method: get
+          cors: true
           request:
-            querystrings:
-              uri: false
+            parameters:
+              querystrings:
+                uri: false
 
 plugins:
   - serverless-plugin-typescript
