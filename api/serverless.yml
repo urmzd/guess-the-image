@@ -3,6 +3,9 @@ frameworkVersion: "2"
 
 package:
   individually: true
+  apiGateway:
+    apiKeys:
+      - amplifyKey
   include:
     - "./google-service-credentials.json"
 
@@ -20,6 +23,7 @@ functions:
           path: language
           method: get
           cors: true
+          private: true
           request:
             parameters:
               querystrings:

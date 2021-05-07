@@ -20,7 +20,7 @@
   },
   "scripts": {
     "start": "sls offline",
-    "deploy": "sls deploy"
+    "deploy": "sls deploy --conceal"
   },
   "author": "Urmzd Mukhammadnaim",
   "license": "ISC"
