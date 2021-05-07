@@ -28,5 +28,6 @@ jobs:
           name: google-service-credentials
           path: ./api
       - run: npm install
+        working-directory: ./api
       - run: npm run deploy
         working-directory: ./api
