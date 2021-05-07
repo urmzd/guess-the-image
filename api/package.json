@@ -20,7 +20,7 @@
   },
   "scripts": {
     "start": "sls offline",
-    "deploy": "sls deploy --package ./.serverless/getLanguage.zip"
+    "deploy": "sls deploy --package ./.serverless"
   },
   "author": "Urmzd Mukhammadnaim",
   "license": "ISC"
