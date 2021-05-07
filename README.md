@@ -8,14 +8,14 @@
 - "[T]": Test
 
 ## Front End
-###Stack:
+### Stack:
   - Gatsby
   - Amplify
   - GraphQL
 
 
 ## Back End
-###Stack:
+### Stack:
   - AppSync
   - Lambda
   - API Gateway
