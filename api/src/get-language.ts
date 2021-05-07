@@ -15,7 +15,7 @@ export const getApiGatewayResponse = (
   args?: { [key: string]: any }
 ) => ({
   statusCode,
-  body: args ? JSON.stringify(args) : "{}",
+  body: JSON.stringify(args ?? {}),
   headers: {
     "Access-Control-Allow-Origin": "*",
   },
