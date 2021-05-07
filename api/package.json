@@ -6,7 +6,8 @@
   "dependencies": {
     "@google-cloud/vision": "^2.3.1",
     "aws-lambda": "^1.0.6",
-    "aws-sdk": "^2.901.0"
+    "aws-sdk": "^2.901.0",
+    "types": "file:../types"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.76",

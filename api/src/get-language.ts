@@ -1,5 +1,6 @@
 import { ImageAnnotatorClient } from "@google-cloud/vision";
 import { APIGatewayProxyHandler } from "aws-lambda";
+import { GetLanguageQueryParameters, LanguageCodeOrNull } from "types";
 
 const imageAnnotatorClient = new ImageAnnotatorClient();
 
@@ -14,26 +15,35 @@ export const getApiGatewayResponse = (
   args?: { [key: string]: any }
 ) => ({
   statusCode,
-  body: args ? JSON.stringify(args) : "",
+  body: args ? JSON.stringify(args) : "{}",
 });
 
 export const handler: APIGatewayProxyHandler = async (event) => {
-  if (event.queryStringParameters) {
-    const { uri } = event.queryStringParameters;
+  const {
+    uris,
+  } = event.multiValueQueryStringParameters as GetLanguageQueryParameters;
 
-    try {
-      const { languageCode } = (
-        await imageAnnotatorClient.textDetection(uri)
-      )?.[0]?.fullTextAnnotation?.pages?.[0]?.property?.detectedLanguages?.[0];
-
-      return getApiGatewayResponse(HttpStatusCodes.OK, { languageCode });
-    } catch (error) {
-      return getApiGatewayResponse(
-        HttpStatusCodes.INTERNAL_SERVER_ERROR,
-        error
-      );
-    }
+  if (!uris) {
+    return getApiGatewayResponse(HttpStatusCodes.BAD_REQUEST);
   }
 
-  return getApiGatewayResponse(HttpStatusCodes.BAD_REQUEST);
+  try {
+    const languageCodePromises = uris?.map((uri) =>
+      imageAnnotatorClient.textDetection(uri)
+    );
+
+    const languageCodes: LanguageCodeOrNull[] = (
+      await Promise.all(languageCodePromises)
+    )
+      .map(
+        (code) =>
+          code?.[0]?.fullTextAnnotation?.pages?.[0]?.property
+            ?.detectedLanguages?.[0]?.languageCode
+      )
+      .map((code) => (code === "und" ? null : code));
+
+    return getApiGatewayResponse(HttpStatusCodes.OK, { languageCodes });
+  } catch (error) {
+    return getApiGatewayResponse(HttpStatusCodes.INTERNAL_SERVER_ERROR, error);
+  }
 };
