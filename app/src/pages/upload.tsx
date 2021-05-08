@@ -1,26 +1,27 @@
 import React, { useRef, useEffect, useState } from "react";
 import {
   Box,
-  Card,
-  CardContent,
-  CardMedia,
+  Button,
   Grid,
+  IconButton,
   Paper,
   TextField,
-  Typography,
 } from "@material-ui/core";
-import { PageContainerStyle } from "./index";
+import { Alert } from "@material-ui/lab";
+import { PageContainer } from "./index";
 import "../styles/index.css";
+import { ArrowBack } from "@material-ui/icons";
 
 const ImageCardImageStyle = (src: string) => ({
   backgroundImage: `url(${src})`,
   backgroundSize: "cover",
   backgroundRepeat: "no-repeat",
+  aspectRatio: "16/9",
+  height: 400,
 });
 
 const ImageCardPaperStyle = {
-  height: "25vh",
-  width: "25vw",
+  transition: "all ease-in-out 1s",
 };
 
 type ImageCardProps = {
@@ -29,10 +30,35 @@ type ImageCardProps = {
 
 const ImageCard = ({ src }: ImageCardProps) => (
   <Paper elevation={12} variant="outlined" style={ImageCardPaperStyle}>
-    <Box style={ImageCardImageStyle(src)} height={9 / 10} />
-    <Box height={1 / 10}>
-      <TextField placeholder="Enter a hint..." />
-    </Box>
+    <Grid container>
+      <Grid item xs={12}>
+        <Alert severity="error">Picture does not have text</Alert>
+      </Grid>
+      <Grid item xs={12} style={ImageCardImageStyle(src)} />
+      <Grid item xs={12}>
+        <TextField placeholder="Enter a hint..." fullWidth variant="filled" />
+      </Grid>
+      <Grid
+        item
+        container
+        xs={12}
+        justify="space-between"
+        style={{ padding: 12 }}
+      >
+        <Grid item xs={4}>
+          <Button variant="contained">BACK</Button>
+        </Grid>
+        <Grid container xs={8} item justify="flex-end" spacing={4}>
+          <Grid item>
+            <Button variant="contained">NEXT</Button>
+          </Grid>
+
+          <Grid item>
+            <Button variant="contained">COMPLETE</Button>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Grid>
   </Paper>
 );
 
@@ -47,28 +73,25 @@ const UploadPage = () => {
   }, []);
 
   return (
-    <Grid
-      container
-      style={PageContainerStyle}
-      alignItems="center"
-      justify="center"
-    >
-      {files?.map((file) => (
-        <Grid item key={file.name}>
-          <ImageCard src={URL.createObjectURL(file)} />
+    <PageContainer>
+      <>
+        {files?.map((file) => (
+          <Grid item key={file.name}>
+            <ImageCard src={URL.createObjectURL(file)} />
+          </Grid>
+        ))}
+        <Grid item>
+          <input
+            type="file"
+            ref={inputRef}
+            style={{ display: "none" }}
+            onChange={(event) => setFiles(Array.from(event.target.files))}
+            multiple
+            accept=".jpeg, .png, .jpg"
+          />
         </Grid>
-      ))}
-      <Grid item>
-        <input
-          type="file"
-          ref={inputRef}
-          style={{ display: "none" }}
-          onChange={(event) => setFiles(Array.from(event.target.files))}
-          multiple
-          accept=".jpeg, .png, .jpg"
-        />
-      </Grid>
-    </Grid>
+      </>
+    </PageContainer>
   );
 };
 export default UploadPage;

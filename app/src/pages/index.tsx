@@ -1,6 +1,12 @@
 import React, { useReducer } from "react";
 import { navigate } from "gatsby";
-import { Typography, Grid, IconButton, GridProps } from "@material-ui/core";
+import {
+  Typography,
+  Grid,
+  IconButton,
+  GridProps,
+  Fade,
+} from "@material-ui/core";
 import { CloudUpload, PlayCircleFilled } from "@material-ui/icons";
 import "../styles/index.css";
 
@@ -71,11 +77,10 @@ const CustomIconButtonStyles = (eventState?: UIEventStates) => ({
   transition: StyleTransitions.DEFAULT,
 });
 
-const SubContainerLabelStyles = (show?: boolean) => ({
-  opacity: +show,
+const SubContainerLabelStyles = {
   transition: StyleTransitions.DEFAULT,
   color: Colours.WHITE,
-});
+};
 
 const SubContainerStyles = (eventState: UIEventStates) => ({
   height: `${eventState}vh`,
@@ -114,13 +119,12 @@ const IndexPageSubContainerWrapper = ({
       }
     >
       <CustomIconButton eventState={eventState}>{children}</CustomIconButton>
-      <Grid
-        item
-        style={SubContainerLabelStyles(eventState === UIEventStates.CLICKED)}
-      >
-        <Typography>{`PRESS TO ${label
-          .replace("/", "")
-          .toUpperCase()}`}</Typography>
+      <Grid item style={SubContainerLabelStyles}>
+        <Fade in={eventState === UIEventStates.CLICKED}>
+          <Typography>{`PRESS TO ${label
+            .replace("/", "")
+            .toUpperCase()}`}</Typography>
+        </Fade>
       </Grid>
     </Grid>
   );
@@ -161,12 +165,12 @@ const subContainerReducer = (
   return state;
 };
 
-type PageContainerProps = {
+export type PageContainerProps = {
   children: JSX.Element;
-  props: GridProps;
+  props?: GridProps;
 };
 
-export const PageContainer = ({ props, children }: PageContainerProps) => (
+export const PageContainer = ({ props = {}, children }: PageContainerProps) => (
   <Grid
     container
     style={PageContainerStyle}
