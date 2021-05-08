@@ -14,7 +14,8 @@ enum SubContainerActionTypes {
   INCREMENT = "increment",
 }
 
-enum PageLocations {
+export enum PageLocations {
+  INDEX = "/",
   PLAY = "/play",
   UPLOAD = "/upload",
 }
@@ -93,7 +94,11 @@ const SubContainerStyles = (eventState: UIEventStates) => ({
 });
 
 const CustomIconButton = ({ children, eventState }: CustomIconButtonProps) => (
-  <IconButton style={CustomIconButtonStyles(eventState)}>{children}</IconButton>
+  <Fade in={!!eventState}>
+    <IconButton style={CustomIconButtonStyles(eventState)}>
+      {children}
+    </IconButton>
+  </Fade>
 );
 
 const IndexPageSubContainerWrapper = ({
@@ -112,20 +117,21 @@ const IndexPageSubContainerWrapper = ({
       alignContent="center"
       style={SubContainerStyles(eventState)}
       onMouseEnter={() => setEventState(UIEventStates.HOVERING)}
-      onClick={() =>
-        eventState === UIEventStates.CLICKED
-          ? goTo()
-          : setEventState(UIEventStates.CLICKED)
-      }
+      onTransitionEnd={() => eventState === UIEventStates.CLICKED && goTo()}
+      onClick={() => setEventState(UIEventStates.CLICKED)}
     >
-      <CustomIconButton eventState={eventState}>{children}</CustomIconButton>
-      <Grid item style={SubContainerLabelStyles}>
-        <Fade in={eventState === UIEventStates.CLICKED}>
-          <Typography>{`PRESS TO ${label
-            .replace("/", "")
-            .toUpperCase()}`}</Typography>
-        </Fade>
-      </Grid>
+      <Fade in={eventState === UIEventStates.CLICKED}>
+        <>
+          <CustomIconButton eventState={eventState}>
+            {children}
+          </CustomIconButton>
+          <Grid item style={SubContainerLabelStyles}>
+            <Typography>{`PRESS TO ${label
+              .replace("/", "")
+              .toUpperCase()}`}</Typography>
+          </Grid>
+        </>
+      </Fade>
     </Grid>
   );
 };
