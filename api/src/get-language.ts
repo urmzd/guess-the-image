@@ -31,19 +31,19 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   }
 
   try {
-    const languageCodePromises = uris?.map((uri) =>
+    const languageCodesRequest = uris?.map((uri) =>
       imageAnnotatorClient.textDetection(uri)
     );
 
-    const languageCodes: LanguageCodeOrNullList = (
-      await Promise.all(languageCodePromises)
-    )
+    const languageCodesResponse = await Promise.all(languageCodesRequest);
+
+    const languageCodes: LanguageCodeOrNullList = languageCodesResponse
       .map(
         (code) =>
           code?.[0]?.fullTextAnnotation?.pages?.[0]?.property
             ?.detectedLanguages?.[0]?.languageCode
       )
-      .map((code) => (code === "und" ? null : code));
+      .map((code) => (!code || code === "und" ? null : code));
 
     return getApiGatewayResponse(HttpStatusCodes.OK, { languageCodes });
   } catch (error) {
