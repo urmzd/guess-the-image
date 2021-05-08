@@ -1,5 +1,5 @@
 import { GetLanguageResponse, UriList } from "types";
-export const getLanguageCode = async (uris: UriList) => {
+export const getLanguageCode = async (...uris: UriList) => {
   const queryParameters = new URLSearchParams(uris.map((uri) => ["uris", uri]));
   try {
     const response = await fetch(
