@@ -1,23 +1,41 @@
 import React, { useRef, useEffect, useState } from "react";
 import {
+  Box,
   Card,
   CardContent,
   CardMedia,
   Grid,
   Paper,
+  TextField,
   Typography,
 } from "@material-ui/core";
+import { PageContainerStyle } from "./index";
+import "../styles/index.css";
 
-const ImageCard = ({ src }: { src: string }) => (
-  <Paper elevation={3} variant="outlined" style={{ height: 500, width: 500 }}>
-    <Grid container>
-      <Grid item style={{ backgroundImage: src, height: 300, width: 300 }} />
-      <Grid item>
-        <Typography>Hello</Typography>
-      </Grid>
-    </Grid>
+const ImageCardImageStyle = (src: string) => ({
+  backgroundImage: `url(${src})`,
+  backgroundSize: "cover",
+  backgroundRepeat: "no-repeat",
+});
+
+const ImageCardPaperStyle = {
+  height: "25vh",
+  width: "25vw",
+};
+
+type ImageCardProps = {
+  src: string;
+};
+
+const ImageCard = ({ src }: ImageCardProps) => (
+  <Paper elevation={12} variant="outlined" style={ImageCardPaperStyle}>
+    <Box style={ImageCardImageStyle(src)} height={9 / 10} />
+    <Box height={1 / 10}>
+      <TextField placeholder="Enter a hint..." />
+    </Box>
   </Paper>
 );
+
 const UploadPage = () => {
   const inputRef = useRef(null);
   const [files, setFiles] = useState<File[]>();
@@ -29,21 +47,28 @@ const UploadPage = () => {
   }, []);
 
   return (
-    <div>
-      <input
-        type="file"
-        ref={inputRef}
-        style={{ display: "none" }}
-        onChange={(event) => setFiles(Array.from(event.target.files))}
-        multiple
-        accept=".jpeg, .png, .jpg"
-      />
+    <Grid
+      container
+      style={PageContainerStyle}
+      alignItems="center"
+      justify="center"
+    >
       {files?.map((file) => (
-        <div key={file.name}>
+        <Grid item key={file.name}>
           <ImageCard src={URL.createObjectURL(file)} />
-        </div>
+        </Grid>
       ))}
-    </div>
+      <Grid item>
+        <input
+          type="file"
+          ref={inputRef}
+          style={{ display: "none" }}
+          onChange={(event) => setFiles(Array.from(event.target.files))}
+          multiple
+          accept=".jpeg, .png, .jpg"
+        />
+      </Grid>
+    </Grid>
   );
 };
 export default UploadPage;

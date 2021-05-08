@@ -1,6 +1,6 @@
 import React, { useReducer } from "react";
 import { navigate } from "gatsby";
-import { Typography, Grid, IconButton } from "@material-ui/core";
+import { Typography, Grid, IconButton, GridProps } from "@material-ui/core";
 import { CloudUpload, PlayCircleFilled } from "@material-ui/icons";
 import "../styles/index.css";
 
@@ -60,8 +60,9 @@ type CustomIconButtonProps = Pick<
   "children" | "eventState"
 >;
 
-const IndexPageGridContainerStyles = {
+export const PageContainerStyle = {
   minHeight: "100vh",
+  minWidth: "100vw",
 };
 
 const CustomIconButtonStyles = (eventState?: UIEventStates) => ({
@@ -160,6 +161,23 @@ const subContainerReducer = (
   return state;
 };
 
+type PageContainerProps = {
+  children: JSX.Element;
+  props: GridProps;
+};
+
+export const PageContainer = ({ props, children }: PageContainerProps) => (
+  <Grid
+    container
+    style={PageContainerStyle}
+    alignItems="center"
+    justify="center"
+    {...props}
+  >
+    {children}
+  </Grid>
+);
+
 const IndexPage = () => {
   const [state, dispatch] = useReducer(
     subContainerReducer,
@@ -188,25 +206,28 @@ const IndexPage = () => {
   ];
 
   return (
-    <Grid
-      container
-      direction="column"
-      style={IndexPageGridContainerStyles}
-      justify="space-evenly"
+    <PageContainer
+      props={{
+        justify: "space-evenly",
+        direction: "column",
+        alignItems: "stretch",
+      }}
     >
-      {containers
-        .map(({ index, ...container }) => ({
-          index,
-          children: (
-            <IndexPageSubContainerWrapper {...container} index={index} />
-          ),
-        }))
-        .map(({ index, children }) => (
-          <Grid item key={index}>
-            {children}
-          </Grid>
-        ))}
-    </Grid>
+      <>
+        {containers
+          .map(({ index, ...container }) => ({
+            index,
+            children: (
+              <IndexPageSubContainerWrapper {...container} index={index} />
+            ),
+          }))
+          .map(({ index, children }) => (
+            <Grid item key={index}>
+              {children}
+            </Grid>
+          ))}
+      </>
+    </PageContainer>
   );
 };
 
