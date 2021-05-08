@@ -1,25 +1,50 @@
 import React, { useReducer } from "react";
-import { Storage } from "aws-amplify";
 import { navigate } from "gatsby";
 import { Typography, Grid, IconButton } from "@material-ui/core";
 import { CloudUpload, PlayCircleFilled } from "@material-ui/icons";
-import config from "../aws-exports";
 import "../styles/index.css";
 
-Storage.configure({ ...config });
-
-enum Colours {
-  Transparent = "transparent",
-  ShopifyGreen = "#96bf48",
-  White = "#fff",
-  Black = "#000",
+enum SubContainerActionTypes {
+  INCREMENT = "increment",
 }
 
-export enum UIEventStates {
+enum PageLocations {
+  PLAY = "/play",
+  UPLOAD = "/upload",
+}
+
+enum StyleTransitions {
+  DEFAULT = "all ease-in-out 750ms",
+}
+
+enum Colours {
+  TRANSPARENT = "transparent",
+  SHOPIFY_GREEN = "#96bf48",
+  WHITE = "#fff",
+  BLACK = "#000",
+}
+
+enum UIEventStates {
   DEFAULT = 50,
   HOVERING = 80,
   CLICKED = 100,
 }
+
+type SubContainerList = IndexPageSubContainerWrapperProps[];
+
+type SubContainerIndex = 0 | 1;
+
+type SubContainerState = {
+  subContainers: [number, number];
+};
+
+type SubContainerAction = {
+  type: SubContainerActionTypes;
+  payload: {
+    subContainerIndex: SubContainerIndex;
+    subContainerEventState: UIEventStates;
+  };
+};
 
 type IndexPageSubContainerWrapperProps = {
   children: JSX.Element;
@@ -40,21 +65,23 @@ const IndexPageGridContainerStyles = {
 };
 
 const CustomIconButtonStyles = (eventState?: UIEventStates) => ({
-  color: eventState > UIEventStates.DEFAULT ? Colours.White : Colours.Black,
+  color: eventState > UIEventStates.DEFAULT ? Colours.WHITE : Colours.BLACK,
   fontSize: "3rem",
   transition: StyleTransitions.DEFAULT,
 });
 
-enum StyleTransitions {
-  DEFAULT = "all ease-in-out 750ms",
-}
+const SubContainerLabelStyles = (show?: boolean) => ({
+  opacity: +show,
+  transition: StyleTransitions.DEFAULT,
+  color: Colours.WHITE,
+});
 
 const SubContainerStyles = (eventState: UIEventStates) => ({
   height: `${eventState}vh`,
   background:
     eventState > UIEventStates.DEFAULT
-      ? Colours.ShopifyGreen
-      : Colours.Transparent,
+      ? Colours.SHOPIFY_GREEN
+      : Colours.TRANSPARENT,
   opacity: `${eventState > 0 ? 1 : 0}`,
   transition: StyleTransitions.DEFAULT,
 });
@@ -62,11 +89,6 @@ const SubContainerStyles = (eventState: UIEventStates) => ({
 const CustomIconButton = ({ children, eventState }: CustomIconButtonProps) => (
   <IconButton style={CustomIconButtonStyles(eventState)}>{children}</IconButton>
 );
-const IndexPageSubContainerLabelStyles = (show?: boolean) => ({
-  opacity: +show,
-  transition: StyleTransitions.DEFAULT,
-  color: Colours.White,
-});
 
 const IndexPageSubContainerWrapper = ({
   eventState,
@@ -93,9 +115,7 @@ const IndexPageSubContainerWrapper = ({
       <CustomIconButton eventState={eventState}>{children}</CustomIconButton>
       <Grid
         item
-        style={IndexPageSubContainerLabelStyles(
-          eventState === UIEventStates.CLICKED
-        )}
+        style={SubContainerLabelStyles(eventState === UIEventStates.CLICKED)}
       >
         <Typography>{`PRESS TO ${label
           .replace("/", "")
@@ -105,34 +125,9 @@ const IndexPageSubContainerWrapper = ({
   );
 };
 
-export enum PageLocations {
-  PLAY = "/play",
-  UPLOAD = "/upload",
-}
-
-export type SubContainerList = IndexPageSubContainerWrapperProps[];
-
-export type SubContainerState = {
-  subContainers: [number, number];
-};
-
-export enum SubContainerActionTypes {
-  INCREMENT = "increment",
-}
-
-export type SubContainerAction = {
-  type: SubContainerActionTypes;
-  payload: {
-    subContainerIndex: SubContainerIndex;
-    subContainerEventState: UIEventStates;
-  };
-};
-
 const subContainerInitialState: SubContainerState = {
   subContainers: [UIEventStates.DEFAULT, UIEventStates.DEFAULT],
 };
-
-type SubContainerIndex = 0 | 1;
 
 const subContainerIncrement = (
   index: SubContainerIndex,
