@@ -17,6 +17,7 @@
   "dependencies": {
     "@material-ui/core": "^4.11.4",
     "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.58",
     "aws-amplify": "^3.3.27",
     "gatsby": "^3.4.0",
     "graphql": "^15.5.0",
