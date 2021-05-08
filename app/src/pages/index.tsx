@@ -126,7 +126,7 @@ const IndexPageSubContainerWrapper = ({
 };
 
 const subContainerInitialState: SubContainerState = {
-  subContainers: [UIEventStates.DEFAULT, UIEventStates.DEFAULT],
+  subContainers: [UIEventStates.HOVERING, 100 - UIEventStates.HOVERING],
 };
 
 const subContainerIncrement = (
