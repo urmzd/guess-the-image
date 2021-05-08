@@ -7,6 +7,6 @@ type Media @model {
 
 type S3Object {
   key: String!
-  bucket: String!
-  region: String!
+  bucket: String
+  region: String
 }
