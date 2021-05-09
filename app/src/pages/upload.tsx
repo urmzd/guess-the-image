@@ -8,13 +8,15 @@ import {
     CircularProgress,
 } from '@material-ui/core'
 import { Alert } from '@material-ui/lab'
-import { PageContainer, StyleTransitions } from './index'
+import { PageContainer, PageLocations, StyleTransitions } from './index'
+import { navigate } from 'gatsby'
 import config from '../aws-exports'
 import Amplify, { Storage, API, graphqlOperation } from 'aws-amplify'
-import * as mutations from '../graphql/mutations'
+import { GraphQLResult } from '../../node_modules/@aws-amplify/api-graphql/lib-esm/types'
 import { nanoid } from 'nanoid'
 import { getLanguageCode } from '../utils/http-api-utils'
 import { LanguageCodeOrNull } from 'types'
+import * as mutations from '../graphql/mutations'
 import '../styles/index.css'
 
 Amplify.configure({ ...config })
@@ -38,7 +40,7 @@ const imageCardImageStyle = (src: string) => ({
 export type HintChangeFunction = (index: number, hint: string) => void;
 
 type ImageCardProps = {
-  media: MediaList;
+  mediaList: ImageCardMediaList;
   index: number;
   onHintChange: HintChangeFunction;
   onBack: () => void;
@@ -47,7 +49,7 @@ type ImageCardProps = {
 };
 
 const ImageCard = ({
-    media,
+    mediaList,
     index,
     onBack,
     onNext,
@@ -56,20 +58,24 @@ const ImageCard = ({
 }: ImageCardProps) => (
     <Paper elevation={12} variant="outlined" style={imageCardStyle}>
         <Grid container>
-            {!media[index].languageCode && (
+            {!mediaList[index].languageCode && (
                 <Grid item xs={12}>
-                    <Fade in={!media[index].languageCode}>
-                        <Alert severity="error">Picture does not have text</Alert>
+                    <Fade in={!mediaList[index].languageCode}>
+                        <Alert severity="warning">
+                            {
+                                'Since picture does not have picture. It will not be displayed in game.'
+                            }
+                        </Alert>
                     </Fade>
                 </Grid>
             )}
-            <Grid item xs={12} style={imageCardImageStyle(media[index].url)} />
+            <Grid item xs={12} style={imageCardImageStyle(mediaList[index].url)} />
             <Grid container item xs={12} style={{ padding: 12 }} spacing={3}>
-                {media[index].languageCode && (
+                {mediaList[index].languageCode && (
                     <Grid item xs={12}>
                         <TextField
                             onChange={(event) => onHintChange(index, event.target.value)}
-                            value={media[index].hint ?? ''}
+                            value={mediaList[index].hint ?? ''}
                             placeholder="Enter a hint..."
                             fullWidth
                         />
@@ -84,7 +90,7 @@ const ImageCard = ({
                     <Grid item>
                         <Button
                             variant="contained"
-                            disabled={index === media.length - 1}
+                            disabled={index === mediaList.length - 1}
                             onClick={onNext}
                         >
                             {'NEXT'}
@@ -122,12 +128,11 @@ export type StoragePutResponse = { key: ImageKey };
 export type Media = {
   hint?: string;
   languageCode: LanguageCodeOrNull;
-  media: {
-    key: ImageKey;
-  };
-} & { url: string; id: string };
+  media: { key: ImageKey };
+};
+export type ImageCardMedia = Media & { url: string; id: string };
 
-export type MediaList = Media[];
+export type ImageCardMediaList = ImageCardMedia[];
 
 export enum AsyncStatuses {
   FULFILLED,
@@ -176,14 +181,16 @@ const uploadImages = async (files: FileList) => {
         )
         const languageCodes = await getLanguageCode(...imageKeys)
 
-        const medias: MediaList = languageCodes.map((languageCode, index) => ({
-            languageCode,
-            media: {
-                key: imageKeys[index],
-            },
-            url: URL.createObjectURL(files[index]),
-            id: imageMetas[index].id,
-        }))
+        const medias: ImageCardMediaList = languageCodes.map(
+            (languageCode, index) => ({
+                languageCode,
+                media: {
+                    key: imageKeys[index],
+                },
+                url: URL.createObjectURL(files[index]),
+                id: imageMetas[index].id,
+            })
+        )
 
         return medias
     } catch (error) {
@@ -193,18 +200,23 @@ const uploadImages = async (files: FileList) => {
         throw new Error(error)
     }
 }
-const storeImageMetaData = async (mediaList: MediaList) => {
+const storeImageMetaData = async (mediaList: ImageCardMediaList) => {
     const mutationQueries = mediaList.map(
         ({ id, languageCode, hint, media }) =>
       API.graphql(
           graphqlOperation(mutations.createMedia, {
               input: { id, languageCode, hint, media },
           })
-      ) as Promise<{ [key: string]: unknown }>
+      ) as Promise<GraphQLResult<Record<string, unknown>>>
     )
 
     try {
-        await Promise.all(mutationQueries)
+        const queryResponses = await Promise.all(mutationQueries)
+        queryResponses.forEach(({ errors }) => {
+            if (errors) {
+                throw new Error(errors.toString())
+            }
+        })
     } catch (error) {
         throw new Error(error)
     }
@@ -229,8 +241,14 @@ const UploadPage = (): JSX.Element => {
     useEffect(() => {
         if (storeDataStatus === AsyncStatuses.IN_PROGRESS) {
             storeImageMetaData(images)
-                .then(() => setStoreDataStatus(AsyncStatuses.FULFILLED))
+                .then(() => {
+                    setStoreDataStatus(AsyncStatuses.FULFILLED)
+                })
                 .catch(() => setStoreDataStatus(AsyncStatuses.REJECTED))
+        }
+
+        if (storeDataStatus === AsyncStatuses.FULFILLED) {
+            navigate(PageLocations.PLAY)
         }
     })
 
@@ -247,7 +265,7 @@ const UploadPage = (): JSX.Element => {
 
     useEffect(() => {
         if (inputRef) {
-            (inputRef.current as HTMLElement).click()
+            triggerUpload()
         }
     }, [])
 
@@ -264,25 +282,42 @@ const UploadPage = (): JSX.Element => {
         setImageIndex(imageIndex ? imageIndex - 1 : 0)
     const completeProcess = () => setStoreDataStatus(AsyncStatuses.IN_PROGRESS)
 
+    const triggerUpload = () => inputRef.current.click()
+
     return (
         <PageContainer>
             <>
-                <Grid item>
-                    {images ? (
+                {images ? (
+                    <Grid item>
                         <Fade in={!images?.length}>
                             <ImageCard
                                 index={imageIndex}
-                                media={images}
+                                mediaList={images}
                                 onNext={goToNextImage}
                                 onBack={goToPreviousImage}
                                 onHintChange={onHintChange}
                                 onComplete={completeProcess}
                             />
                         </Fade>
-                    ) : (
-                        <CircularProgress />
-                    )}
-                </Grid>
+                    </Grid>
+                ) : (
+                    <Grid
+                        container
+                        item
+                        direction="column"
+                        alignItems="center"
+                        spacing={4}
+                    >
+                        <Grid item>
+                            <CircularProgress />
+                        </Grid>
+                        <Grid item>
+                            <Button variant="outlined" onClick={triggerUpload}>
+                                {'UPLOAD'}
+                            </Button>
+                        </Grid>
+                    </Grid>
+                )}
                 <Grid item>
                     <input
                         type="file"
