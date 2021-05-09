@@ -1,9 +1,9 @@
 export type LanguageCodeOrNull = string | null;
 export type LanguageCodeOrNullList = LanguageCodeOrNull[]
-export type UriList = string[];
+export type KeyList = string[];
 
 export type GetLanguageQueryParameters = {
-  uris: UriList;
+  keys: KeyList;
 }
 
 export type GetLanguageResponse = {
