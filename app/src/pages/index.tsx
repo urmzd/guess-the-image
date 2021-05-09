@@ -6,6 +6,7 @@ import {
     IconButton,
     GridProps,
     Fade,
+    CircularProgress,
 } from '@material-ui/core'
 import { CloudUpload, PlayCircleFilled } from '@material-ui/icons'
 import '../styles/index.css'
@@ -107,34 +108,38 @@ const IndexPageSubContainerWrapper = ({
     children,
     label,
     goTo,
-}: IndexPageSubContainerWrapperProps) => {
-    return (
-        <Grid
-            container
-            direction="column"
-            alignItems="center"
-            justify="center"
-            alignContent="center"
-            style={SubContainerStyles(eventState)}
-            onMouseEnter={() => setEventState(UIEventStates.HOVERING)}
-            onTransitionEnd={() => eventState === UIEventStates.CLICKED && goTo()}
-            onClick={() => setEventState(UIEventStates.CLICKED)}
-        >
-            <Fade in={eventState === UIEventStates.CLICKED}>
-                <>
-                    <CustomIconButton eventState={eventState}>
-                        {children}
-                    </CustomIconButton>
-                    <Grid item style={SubContainerLabelStyles}>
-                        <Typography>{`PRESS TO ${label
-                            .replace('/', '')
-                            .toUpperCase()}`}</Typography>
-                    </Grid>
-                </>
-            </Fade>
-        </Grid>
-    )
-}
+}: IndexPageSubContainerWrapperProps) => (
+    <Grid
+        container
+        direction="column"
+        alignItems="center"
+        justify="center"
+        alignContent="center"
+        style={SubContainerStyles(eventState)}
+        onMouseEnter={() => setEventState(UIEventStates.HOVERING)}
+        onTransitionEnd={() => eventState === UIEventStates.CLICKED && goTo()}
+        onClick={() => setEventState(UIEventStates.CLICKED)}
+    >
+        <Fade in={eventState === UIEventStates.CLICKED}>
+            <>
+                <CustomIconButton eventState={eventState}>
+                    {eventState === UIEventStates.CLICKED ? (
+                        <CircularProgress color="inherit" />
+                    ) : (
+                        children
+                    )}
+                </CustomIconButton>
+                <Grid item style={SubContainerLabelStyles}>
+                    <Typography>
+                        {eventState !== UIEventStates.CLICKED
+                            ? `PRESS TO ${label.replace('/', '').toUpperCase()}`
+                            : 'Loading...'}
+                    </Typography>
+                </Grid>
+            </>
+        </Fade>
+    </Grid>
+)
 
 const subContainerInitialState: SubContainerState = {
     subContainers: [UIEventStates.HOVERING, 100 - UIEventStates.HOVERING],
@@ -160,7 +165,7 @@ const subContainerReducer = (
 ) => {
     if (type === SubContainerActionTypes.INCREMENT) {
         return {
-            subContainers: state.subContainers.map((container, index) =>
+            subContainers: state.subContainers.map((_, index) =>
                 index === subContainerIndex
                     ? subContainerEventState
                     : UIEventStates.CLICKED - subContainerEventState
@@ -176,7 +181,10 @@ export type PageContainerProps = {
   props?: GridProps;
 };
 
-export const PageContainer = ({ props = {}, children }: PageContainerProps) => (
+export const PageContainer = ({
+    props = {},
+    children,
+}: PageContainerProps): JSX.Element => (
     <Grid
         container
         style={PageContainerStyle}
@@ -188,7 +196,7 @@ export const PageContainer = ({ props = {}, children }: PageContainerProps) => (
     </Grid>
 )
 
-const IndexPage = () => {
+const IndexPage = (): JSX.Element => {
     const [state, dispatch] = useReducer(
         subContainerReducer,
         subContainerInitialState
