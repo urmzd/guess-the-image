@@ -1,4 +1,5 @@
 import {
+    getQueryStrings,
     parseTextResponse,
     TextDetectionResponseList,
 } from '../src/get-language'
@@ -10,7 +11,11 @@ describe('language code is parsed correctly', () => {
             {
                 fullTextAnnotation: {
                     pages: [
-                        { property: { detectedLanguages: [{ languageCode: 'en' }] } },
+                        {
+                            property: {
+                                detectedLanguages: [{ languageCode: 'en' }],
+                            },
+                        },
                     ],
                 },
             },
@@ -19,7 +24,11 @@ describe('language code is parsed correctly', () => {
             {
                 fullTextAnnotation: {
                     pages: [
-                        { property: { detectedLanguages: [{ languageCode: 'und' }] } },
+                        {
+                            property: {
+                                detectedLanguages: [{ languageCode: 'und' }],
+                            },
+                        },
                     ],
                 },
             },
@@ -28,7 +37,11 @@ describe('language code is parsed correctly', () => {
             {
                 fullTextAnnotation: {
                     pages: [
-                        { property: { detectedLanguages: [{ languageCode: null }] } },
+                        {
+                            property: {
+                                detectedLanguages: [{ languageCode: null }],
+                            },
+                        },
                     ],
                 },
             },
@@ -40,8 +53,8 @@ describe('language code is parsed correctly', () => {
 
     test(`response with non 'und' code returns string`, () => {
         expect(parseTextResponse(responses[1])).toEqual(
-            responses[1][0].fullTextAnnotation.pages[0].property.detectedLanguages[0]
-                .languageCode
+            responses[1][0].fullTextAnnotation.pages[0].property
+                .detectedLanguages[0].languageCode
         )
     })
 
@@ -54,4 +67,19 @@ describe('language code is parsed correctly', () => {
     })
 })
 
-//describe('')
+describe('query string is pulled from event correctly', () => {
+    const expected = { keys: ['a', 'b'] }
+    test('empty multiValueQueryStringParameters returns undefined', () => {
+        expect(
+            getQueryStrings({ multiValueQueryStringParameters: null })
+        ).toBeUndefined()
+    })
+
+    test('full multiValueQueryStringParameters returns object', () => {
+        expect(
+            getQueryStrings({
+                multiValueQueryStringParameters: { ...expected },
+            })
+        ).toEqual(expect.objectContaining(expected))
+    })
+})
