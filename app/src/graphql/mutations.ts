@@ -10,11 +10,9 @@ export const createMedia = /* GraphQL */ `
     createMedia(input: $input, condition: $condition) {
       id
       hint
-      language
+      languageCode
       media {
         key
-        bucket
-        region
       }
       _version
       _deleted
@@ -32,11 +30,9 @@ export const updateMedia = /* GraphQL */ `
     updateMedia(input: $input, condition: $condition) {
       id
       hint
-      language
+      languageCode
       media {
         key
-        bucket
-        region
       }
       _version
       _deleted
@@ -54,11 +50,9 @@ export const deleteMedia = /* GraphQL */ `
     deleteMedia(input: $input, condition: $condition) {
       id
       hint
-      language
+      languageCode
       media {
         key
-        bucket
-        region
       }
       _version
       _deleted

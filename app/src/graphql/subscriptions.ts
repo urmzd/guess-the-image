@@ -7,11 +7,9 @@ export const onCreateMedia = /* GraphQL */ `
     onCreateMedia {
       id
       hint
-      language
+      languageCode
       media {
         key
-        bucket
-        region
       }
       _version
       _deleted
@@ -26,11 +24,9 @@ export const onUpdateMedia = /* GraphQL */ `
     onUpdateMedia {
       id
       hint
-      language
+      languageCode
       media {
         key
-        bucket
-        region
       }
       _version
       _deleted
@@ -45,11 +41,9 @@ export const onDeleteMedia = /* GraphQL */ `
     onDeleteMedia {
       id
       hint
-      language
+      languageCode
       media {
         key
-        bucket
-        region
       }
       _version
       _deleted

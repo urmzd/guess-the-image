@@ -18,7 +18,7 @@ export const syncMedia = /* GraphQL */ `
       items {
         id
         hint
-        language
+        languageCode
         _version
         _deleted
         _lastChangedAt
@@ -35,11 +35,9 @@ export const getMedia = /* GraphQL */ `
     getMedia(id: $id) {
       id
       hint
-      language
+      languageCode
       media {
         key
-        bucket
-        region
       }
       _version
       _deleted
@@ -59,7 +57,7 @@ export const listMedias = /* GraphQL */ `
       items {
         id
         hint
-        language
+        languageCode
         _version
         _deleted
         _lastChangedAt

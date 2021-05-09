@@ -4,21 +4,19 @@
 
 export type CreateMediaInput = {
   id?: string | null,
-  hint: string,
-  language: string,
+  hint?: string | null,
+  languageCode?: string | null,
   media: S3ObjectInput,
   _version?: number | null,
 };
 
 export type S3ObjectInput = {
   key: string,
-  bucket: string,
-  region: string,
 };
 
 export type ModelMediaConditionInput = {
   hint?: ModelStringInput | null,
-  language?: ModelStringInput | null,
+  languageCode?: ModelStringInput | null,
   and?: Array< ModelMediaConditionInput | null > | null,
   or?: Array< ModelMediaConditionInput | null > | null,
   not?: ModelMediaConditionInput | null,
@@ -67,8 +65,8 @@ export type ModelSizeInput = {
 export type Media = {
   __typename: "Media",
   id?: string,
-  hint?: string,
-  language?: string,
+  hint?: string | null,
+  languageCode?: string | null,
   media?: S3Object,
   _version?: number,
   _deleted?: boolean | null,
@@ -80,14 +78,12 @@ export type Media = {
 export type S3Object = {
   __typename: "S3Object",
   key?: string,
-  bucket?: string,
-  region?: string,
 };
 
 export type UpdateMediaInput = {
   id: string,
   hint?: string | null,
-  language?: string | null,
+  languageCode?: string | null,
   media?: S3ObjectInput | null,
   _version?: number | null,
 };
@@ -100,7 +96,7 @@ export type DeleteMediaInput = {
 export type ModelMediaFilterInput = {
   id?: ModelIDInput | null,
   hint?: ModelStringInput | null,
-  language?: ModelStringInput | null,
+  languageCode?: ModelStringInput | null,
   and?: Array< ModelMediaFilterInput | null > | null,
   or?: Array< ModelMediaFilterInput | null > | null,
   not?: ModelMediaFilterInput | null,
@@ -138,13 +134,11 @@ export type CreateMediaMutation = {
   createMedia?:  {
     __typename: "Media",
     id: string,
-    hint: string,
-    language: string,
+    hint?: string | null,
+    languageCode?: string | null,
     media:  {
       __typename: "S3Object",
       key: string,
-      bucket: string,
-      region: string,
     },
     _version: number,
     _deleted?: boolean | null,
@@ -163,13 +157,11 @@ export type UpdateMediaMutation = {
   updateMedia?:  {
     __typename: "Media",
     id: string,
-    hint: string,
-    language: string,
+    hint?: string | null,
+    languageCode?: string | null,
     media:  {
       __typename: "S3Object",
       key: string,
-      bucket: string,
-      region: string,
     },
     _version: number,
     _deleted?: boolean | null,
@@ -188,13 +180,11 @@ export type DeleteMediaMutation = {
   deleteMedia?:  {
     __typename: "Media",
     id: string,
-    hint: string,
-    language: string,
+    hint?: string | null,
+    languageCode?: string | null,
     media:  {
       __typename: "S3Object",
       key: string,
-      bucket: string,
-      region: string,
     },
     _version: number,
     _deleted?: boolean | null,
@@ -217,8 +207,8 @@ export type SyncMediaQuery = {
     items?:  Array< {
       __typename: "Media",
       id: string,
-      hint: string,
-      language: string,
+      hint?: string | null,
+      languageCode?: string | null,
       _version: number,
       _deleted?: boolean | null,
       _lastChangedAt: number,
@@ -238,13 +228,11 @@ export type GetMediaQuery = {
   getMedia?:  {
     __typename: "Media",
     id: string,
-    hint: string,
-    language: string,
+    hint?: string | null,
+    languageCode?: string | null,
     media:  {
       __typename: "S3Object",
       key: string,
-      bucket: string,
-      region: string,
     },
     _version: number,
     _deleted?: boolean | null,
@@ -266,8 +254,8 @@ export type ListMediasQuery = {
     items?:  Array< {
       __typename: "Media",
       id: string,
-      hint: string,
-      language: string,
+      hint?: string | null,
+      languageCode?: string | null,
       _version: number,
       _deleted?: boolean | null,
       _lastChangedAt: number,
@@ -283,13 +271,11 @@ export type OnCreateMediaSubscription = {
   onCreateMedia?:  {
     __typename: "Media",
     id: string,
-    hint: string,
-    language: string,
+    hint?: string | null,
+    languageCode?: string | null,
     media:  {
       __typename: "S3Object",
       key: string,
-      bucket: string,
-      region: string,
     },
     _version: number,
     _deleted?: boolean | null,
@@ -303,13 +289,11 @@ export type OnUpdateMediaSubscription = {
   onUpdateMedia?:  {
     __typename: "Media",
     id: string,
-    hint: string,
-    language: string,
+    hint?: string | null,
+    languageCode?: string | null,
     media:  {
       __typename: "S3Object",
       key: string,
-      bucket: string,
-      region: string,
     },
     _version: number,
     _deleted?: boolean | null,
@@ -323,13 +307,11 @@ export type OnDeleteMediaSubscription = {
   onDeleteMedia?:  {
     __typename: "Media",
     id: string,
-    hint: string,
-    language: string,
+    hint?: string | null,
+    languageCode?: string | null,
     media:  {
       __typename: "S3Object",
       key: string,
-      bucket: string,
-      region: string,
     },
     _version: number,
     _deleted?: boolean | null,
