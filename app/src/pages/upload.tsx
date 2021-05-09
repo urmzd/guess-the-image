@@ -1,4 +1,10 @@
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
+import React, {
+    ChangeEvent,
+    LegacyRef,
+    useEffect,
+    useRef,
+    useState,
+} from 'react'
 import { Button, CircularProgress, Fade, Grid } from '@material-ui/core'
 import { navigate } from 'gatsby'
 import config from '../aws-exports'
@@ -7,7 +13,7 @@ import { nanoid } from 'nanoid'
 import { getLanguageCode } from '../utils/http-api-utils'
 import { LanguageCodeOrNull } from 'types'
 import * as mutations from '../graphql/mutations'
-import { ImageCard, PageContainer  } from '../components'
+import { ImageCard, PageContainer } from '../components'
 import { PageLocations, GraphQLResult } from '../common'
 import '../styles/index.css'
 
@@ -131,8 +137,31 @@ const storeImageMetaData = async (mediaList: ImageCardMediaList) => {
     }
 }
 
+export type DownloadLinkProps = {
+  fileName?: `${string}.json`;
+  data?: Record<string, unknown> | Record<string, unknown>[] | unknown[];
+  show?: boolean;
+};
+export const DownloadLink = React.forwardRef(
+    (
+        { data, show, fileName }: DownloadLinkProps,
+        ref: LegacyRef<HTMLAnchorElement>
+    ): JSX.Element => (
+        <a
+            href={URL.createObjectURL(
+                new Blob([JSON.stringify(data ?? {})], { type: 'application/json' })
+            )}
+            style={{ display: show ? 'inline-block' : 'none' }}
+            download={fileName ? fileName : 'file.json'}
+            ref={ref}
+        />
+    )
+)
+
 const UploadPage = (): JSX.Element => {
     const inputRef = useRef(null)
+    const downloadRef = useRef(null)
+
     const [files, setFiles] = useState<FileList>()
     const [images, setImages] = useState<ImageCardMediaList>()
     const [imageIndex, setImageIndex] = useState<number>(0)
@@ -157,6 +186,7 @@ const UploadPage = (): JSX.Element => {
         }
 
         if (storeDataStatus === AsyncStatuses.FULFILLED) {
+            downloadRef.current.click()
             navigate(PageLocations.PLAY)
         }
     })
@@ -192,6 +222,7 @@ const UploadPage = (): JSX.Element => {
     const completeProcess = () => setStoreDataStatus(AsyncStatuses.IN_PROGRESS)
 
     const triggerUpload = () => inputRef.current.click()
+    console.log(downloadRef)
 
     return (
         <PageContainer>
@@ -235,6 +266,13 @@ const UploadPage = (): JSX.Element => {
                         onChange={uploadHandler}
                         multiple
                         accept={Object.values(ImageExtensions).join(',')}
+                    />
+                </Grid>
+                <Grid item>
+                    <DownloadLink
+                        data={images?.map(({ media: { key } }) => key.split('/').pop())}
+                        fileName={'imageIds.json'}
+                        ref={downloadRef}
                     />
                 </Grid>
             </>
