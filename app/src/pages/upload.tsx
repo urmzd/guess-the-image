@@ -10,7 +10,8 @@ import {
 import { Alert } from '@material-ui/lab'
 import { PageContainer, StyleTransitions } from './index'
 import config from '../aws-exports'
-import Amplify, { Storage } from 'aws-amplify'
+import Amplify, { Storage, API, graphqlOperation } from 'aws-amplify'
+import * as mutations from '../graphql/mutations'
 import { nanoid } from 'nanoid'
 import { getLanguageCode } from '../utils/http-api-utils'
 import { LanguageCodeOrNull } from 'types'
@@ -35,6 +36,7 @@ const imageCardImageStyle = (src: string) => ({
 })
 
 export type HintChangeFunction = (index: number, hint: string) => void;
+
 type ImageCardProps = {
   media: MediaList;
   index: number;
@@ -76,7 +78,7 @@ const ImageCard = ({
                 <Grid item container xs={12} spacing={2}>
                     <Grid item>
                         <Button onClick={onBack} disabled={index === 0}>
-              BACK
+                            {'BACK'}
                         </Button>
                     </Grid>
                     <Grid item>
@@ -191,7 +193,22 @@ const uploadImages = async (files: FileList) => {
         throw new Error(error)
     }
 }
-const storeImageMetaData = async (mediaList: MediaList) => {}
+const storeImageMetaData = async (mediaList: MediaList) => {
+    const mutationQueries = mediaList.map(
+        ({ id, languageCode, hint, media }) =>
+      API.graphql(
+          graphqlOperation(mutations.createMedia, {
+              input: { id, languageCode, hint, media },
+          })
+      ) as Promise<{ [key: string]: unknown }>
+    )
+
+    try {
+        await Promise.all(mutationQueries)
+    } catch (error) {
+        throw new Error(error)
+    }
+}
 
 const UploadPage = (): JSX.Element => {
     const inputRef = useRef(null)
@@ -199,6 +216,7 @@ const UploadPage = (): JSX.Element => {
     const [images, setImages] = useState<MediaList>()
     const [imageIndex, setImageIndex] = useState<number>(0)
     const [uploadStatus, setUploadStatus] = useState<AsyncStatuses>()
+    const [storeDataStatus, setStoreDataStatus] = useState<AsyncStatuses>()
 
     const onHintChange: HintChangeFunction = (index: number, hint: string) => {
         setImages(
@@ -209,8 +227,21 @@ const UploadPage = (): JSX.Element => {
     }
 
     useEffect(() => {
+        if (storeDataStatus === AsyncStatuses.IN_PROGRESS) {
+            storeImageMetaData(images)
+                .then(() => setStoreDataStatus(AsyncStatuses.FULFILLED))
+                .catch(() => setStoreDataStatus(AsyncStatuses.REJECTED))
+        }
+    })
+
+    useEffect(() => {
         if (uploadStatus === AsyncStatuses.IN_PROGRESS) {
-            uploadImages(files).then((data) => setImages(data))
+            uploadImages(files)
+                .then((data) => {
+                    setImages(data)
+                    setUploadStatus(AsyncStatuses.FULFILLED)
+                })
+                .catch(() => setUploadStatus(AsyncStatuses.REJECTED))
         }
     }, [uploadStatus])
 
@@ -231,25 +262,27 @@ const UploadPage = (): JSX.Element => {
         setImageIndex(imageIndex < images.length - 1 ? imageIndex + 1 : imageIndex)
     const goToPreviousImage = () =>
         setImageIndex(imageIndex ? imageIndex - 1 : 0)
+    const completeProcess = () => setStoreDataStatus(AsyncStatuses.IN_PROGRESS)
 
-    console.log(images)
     return (
         <PageContainer>
             <>
-                {images ? (
-                    <Grid item>
-                        <ImageCard
-                            index={imageIndex}
-                            media={images}
-                            onNext={goToNextImage}
-                            onBack={goToPreviousImage}
-                            onHintChange={onHintChange}
-                            onComplete={() => console.log('hi')}
-                        />
-                    </Grid>
-                ) : (
-                    <CircularProgress />
-                )}
+                <Grid item>
+                    {images ? (
+                        <Fade in={!images?.length}>
+                            <ImageCard
+                                index={imageIndex}
+                                media={images}
+                                onNext={goToNextImage}
+                                onBack={goToPreviousImage}
+                                onHintChange={onHintChange}
+                                onComplete={completeProcess}
+                            />
+                        </Fade>
+                    ) : (
+                        <CircularProgress />
+                    )}
+                </Grid>
                 <Grid item>
                     <input
                         type="file"
