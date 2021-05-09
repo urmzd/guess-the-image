@@ -26,7 +26,7 @@
         "IdentityPoolName": "shopifyimagereposito450f8e19_identitypool_450f8e19__dev",
         "UserPoolName": "shopifyimagereposito450f8e19_userpool_450f8e19"
       },
-      "lastPushTimeStamp": "2021-05-09T03:01:11.646Z",
+      "lastPushTimeStamp": "2021-05-09T03:58:14.827Z",
       "providerMetadata": {
         "s3TemplateURL": "https://s3.amazonaws.com/amplify-shopifyimagereposito-dev-233350-deployment/amplify-cfn-templates/auth/shopifyimagereposito450f8e19-cloudformation-template.yml",
         "logicalId": "authshopifyimagereposito450f8e19"
@@ -41,7 +41,7 @@
         "BucketName": "media233350-dev",
         "Region": "us-east-1"
       },
-      "lastPushTimeStamp": "2021-05-09T03:01:11.650Z",
+      "lastPushTimeStamp": "2021-05-09T03:58:14.829Z",
       "providerMetadata": {
         "s3TemplateURL": "https://s3.amazonaws.com/amplify-shopifyimagereposito-dev-233350-deployment/amplify-cfn-templates/storage/s3-cloudformation-template.json",
         "logicalId": "storagemedia"
@@ -67,12 +67,12 @@
         "GraphQLAPIEndpointOutput": "https://bygsqzy2grggjojolfq5zy5jqu.appsync-api.us-east-1.amazonaws.com/graphql",
         "GraphQLAPIKeyOutput": "da2-5apnilcplndh5m5mtnc7pid4ne"
       },
-      "lastPushTimeStamp": "2021-05-09T03:01:11.656Z",
+      "lastPushTimeStamp": "2021-05-09T03:58:14.843Z",
       "providerMetadata": {
         "s3TemplateURL": "https://s3.amazonaws.com/amplify-shopifyimagereposito-dev-233350-deployment/amplify-cfn-templates/api/cloudformation-template.json",
         "logicalId": "apishopifyimagereposito"
       },
-      "lastPushDirHash": "46zFoL65BHthxL46B4kz0xUBQSo="
+      "lastPushDirHash": "mA+NvhHxk+cF9A0xWtMJgKrSrlA="
     }
   },
   "function": {},

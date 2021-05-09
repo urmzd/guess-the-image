@@ -2,7 +2,7 @@
   "name": "shopify-image-repository",
   "version": "1.0.0",
   "private": true,
-  "description": "Shopify Image Repository",
+  "description": "Fall 2021 Internship Challenge",
   "author": "Urmzd",
   "keywords": [
     "gatsby"
@@ -10,9 +10,8 @@
   "scripts": {
     "develop": "gatsby develop",
     "start": "gatsby develop",
-    "build": "gatsby build",
-    "serve": "gatsby serve",
-    "clean": "gatsby clean"
+    "build": "gatsby clean && gatsby build",
+    "serve": "gatsby serve"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.4",

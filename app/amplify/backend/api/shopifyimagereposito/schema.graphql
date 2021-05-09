@@ -1,12 +1,10 @@
 type Media @model {
   id: ID!
   hint: String
-  language: String
+  languageCode: String
   media: S3Object!
 }
 
 type S3Object {
   key: String!
-  bucket: String
-  region: String
 }
