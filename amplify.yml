@@ -1,6 +1,6 @@
 verson: 1
 applications:
-  - appRoot: /app
+  - appRoot: app
     backend:
       phases:
         build:
