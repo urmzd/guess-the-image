@@ -4,11 +4,13 @@ backend:
     build:
       commands:
         - "# Execute Amplify CLI with the helper script"
+        - cd app
         - amplifyPush --simple
 frontend:
   phases:
     preBuild:
       commands:
+        - cd app
         - nvm install
         - nvm use
         - npm ci
