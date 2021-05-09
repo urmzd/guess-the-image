@@ -1,15 +1,15 @@
 import { ImageAnnotatorClient, protos } from '@google-cloud/vision'
 import {
-    APIGatewayProxyEvent,
-    APIGatewayProxyHandler,
-    APIGatewayProxyResult,
+  APIGatewayProxyEvent,
+  APIGatewayProxyHandler,
+  APIGatewayProxyResult,
 } from 'aws-lambda'
 import { S3 } from 'aws-sdk'
 import {
-    LanguageCodeOrNull,
-    LanguageCodeOrNullList,
-    KeyList,
-    GetLanguageQueryParameters,
+  LanguageCodeOrNull,
+  LanguageCodeOrNullList,
+  KeyList,
+  GetLanguageQueryParameters,
 } from 'types'
 
 // Clients
@@ -25,13 +25,13 @@ export enum HttpStatusCodes {
 export type ApiGatewayBody = ParsableObject | Error
 
 export const getApiGatewayResponse = (statusCode: HttpStatusCodes) => (
-    body?: ApiGatewayBody
+  body?: ApiGatewayBody
 ): APIGatewayProxyResult => ({
-    statusCode,
-    body: JSON.stringify(body ?? {}),
-    headers: {
-        'Access-Control-Allow-Origin': '*',
-    },
+  statusCode,
+  body: JSON.stringify(body ?? {}),
+  headers: {
+    'Access-Control-Allow-Origin': '*',
+  },
 })
 
 export type TextDetectionResponse = [
@@ -43,30 +43,30 @@ export type TextDetectionResponseList = TextDetectionResponse[]
 export const getQueryStrings = <
   QueryStringType extends Record<string, unknown>
 >(
-        event: APIGatewayProxyEvent
-    ): QueryStringType =>
-        event?.multiValueQueryStringParameters
-            ? (event.multiValueQueryStringParameters as QueryStringType)
-            : undefined
+  event: APIGatewayProxyEvent
+): QueryStringType =>
+  event?.multiValueQueryStringParameters
+    ? (event.multiValueQueryStringParameters as QueryStringType)
+    : undefined
 
 export type ParsableObject = Record<string, unknown>
 export type HttpResponseFunction = () => APIGatewayProxyResult
 
 const getBadRequestResponse: HttpResponseFunction = getApiGatewayResponse(
-    HttpStatusCodes.BAD_REQUEST
+  HttpStatusCodes.BAD_REQUEST
 )
 
 const getOkResponse = (body?: ParsableObject): HttpResponseFunction => () =>
-    getApiGatewayResponse(HttpStatusCodes.OK)(body)
+  getApiGatewayResponse(HttpStatusCodes.OK)(body)
 
 const getInternalServerResponse = (error?: Error): HttpResponseFunction => () =>
-    getApiGatewayResponse(HttpStatusCodes.INTERNAL_SERVER_ERROR)(error)
+  getApiGatewayResponse(HttpStatusCodes.INTERNAL_SERVER_ERROR)(error)
 
 export type GetSignedUrlFunction = (key: string) => Promise<string>
 
 export const getSignedUrls = (
-    execute: GetSignedUrlFunction,
-    ...keys: KeyList
+  execute: GetSignedUrlFunction,
+  ...keys: KeyList
 ): Promise<string>[] => keys.map((key) => execute(key))
 
 export type GetDetectedTextFunction = (
@@ -74,57 +74,57 @@ export type GetDetectedTextFunction = (
 ) => Promise<TextDetectionResponse>
 
 export const getLanguageCodes = async (
-    execute: GetDetectedTextFunction,
-    ...urls: string[]
+  execute: GetDetectedTextFunction,
+  ...urls: string[]
 ): Promise<LanguageCodeOrNullList> => {
-    const promises = urls.map((url) => execute(url))
+  const promises = urls.map((url) => execute(url))
 
-    try {
-        const responses = await Promise.all(promises)
-        return responses.map((response) => parseTextResponse(response))
-    } catch (error) {
-        throw new Error(error)
-    }
+  try {
+    const responses = await Promise.all(promises)
+    return responses.map((response) => parseTextResponse(response))
+  } catch (error) {
+    throw new Error(error)
+  }
 }
 
 export const parseTextResponse = (
-    response: TextDetectionResponse
+  response: TextDetectionResponse
 ): LanguageCodeOrNull => {
-    const { languageCode = 'und' } =
+  const { languageCode = 'und' } =
     response?.[0]?.fullTextAnnotation?.pages?.[0]?.property
-        ?.detectedLanguages?.[0] ?? {}
+      ?.detectedLanguages?.[0] ?? {}
 
-    return languageCode === 'und' ? null : languageCode
+  return languageCode === 'und' ? null : languageCode
 }
 
 export const s3Execute = (key: string): Promise<string> =>
-    s3.getSignedUrlPromise('getObject', {
-        Key: key,
-        Bucket: process.env.S3_BUCKET,
-    })
+  s3.getSignedUrlPromise('getObject', {
+    Key: key,
+    Bucket: process.env.S3_BUCKET,
+  })
 
 export const visionExecute = (url: string): Promise<TextDetectionResponse> =>
-    imageAnnotatorClient.textDetection(url)
+  imageAnnotatorClient.textDetection(url)
 
 export const getResponse = async (
-    queryStrings: GetLanguageQueryParameters
+  queryStrings: GetLanguageQueryParameters
 ): Promise<HttpResponseFunction> => {
-    if (!queryStrings) {
-        return getBadRequestResponse
-    }
+  if (!queryStrings) {
+    return getBadRequestResponse
+  }
 
-    const { keys } = queryStrings
+  const { keys } = queryStrings
 
-    try {
-        const urls = await Promise.all(getSignedUrls(s3Execute, ...keys))
+  try {
+    const urls = await Promise.all(getSignedUrls(s3Execute, ...keys))
 
-        const languageCodes = await getLanguageCodes(visionExecute, ...urls)
+    const languageCodes = await getLanguageCodes(visionExecute, ...urls)
 
-        return getOkResponse({ languageCodes })
-    } catch (error) {
-        return getInternalServerResponse(error)
-    }
+    return getOkResponse({ languageCodes })
+  } catch (error) {
+    return getInternalServerResponse(error)
+  }
 }
 
 export const handler: APIGatewayProxyHandler = async (event) =>
-    (await getResponse(getQueryStrings(event)))()
+  (await getResponse(getQueryStrings(event)))()

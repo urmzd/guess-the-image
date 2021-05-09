@@ -29,7 +29,8 @@
   },
   "scripts": {
     "start": "sls offline",
-    "deploy": "sls deploy --conceal"
+    "deploy": "sls deploy --conceal",
+    "test": "jest"
   },
   "author": "Urmzd Mukhammadnaim",
   "license": "ISC"

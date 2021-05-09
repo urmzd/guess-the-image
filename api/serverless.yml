@@ -1,10 +1,10 @@
 service: api
-frameworkVersion: "2"
+frameworkVersion: '2'
 
 package:
   individually: true
   include:
-    - "./google-service-credentials.json"
+    - './google-service-credentials.json'
 
 provider:
   name: aws
@@ -15,22 +15,22 @@ provider:
   iam:
     role:
       statements:
-        - Effect: "Allow"
+        - Effect: 'Allow'
           Action:
-            - "s3:GetObject"
+            - 's3:GetObject'
           Resource:
             - !Join
-              - ""
-              - - "arn:aws:s3:::"
+              - ''
+              - - 'arn:aws:s3:::'
                 - ${env:S3_BUCKET}
-                - "/*"
+                - '/*'
 
 functions:
   getLanguage:
     handler: src/get-language.handler
 
     environment:
-      GOOGLE_APPLICATION_CREDENTIALS: "./google-service-credentials.json"
+      GOOGLE_APPLICATION_CREDENTIALS: './google-service-credentials.json'
       S3_BUCKET: ${env:S3_BUCKET}
     events:
       - http:
