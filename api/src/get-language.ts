@@ -22,7 +22,7 @@ export enum HttpStatusCodes {
   INTERNAL_SERVER_ERROR = 500,
 }
 
-export type ApiGatewayBody = ParsableObject | Error;
+export type ApiGatewayBody = ParsableObject | Error
 
 export const getApiGatewayResponse = (statusCode: HttpStatusCodes) => (
     body?: ApiGatewayBody
@@ -34,9 +34,11 @@ export const getApiGatewayResponse = (statusCode: HttpStatusCodes) => (
     },
 })
 
-type TextDetectionResponse = [
+export type TextDetectionResponse = [
   protos.google.cloud.vision.v1.IAnnotateImageResponse
-];
+]
+
+export type TextDetectionResponseList = TextDetectionResponse[]
 
 export const getQueryStrings = <
   QueryStringType extends Record<string, unknown>
@@ -47,8 +49,8 @@ export const getQueryStrings = <
             ? (event.multiValueQueryStringParameters as QueryStringType)
             : undefined
 
-export type ParsableObject = Record<string, unknown>;
-export type HttpResponseFunction = () => APIGatewayProxyResult;
+export type ParsableObject = Record<string, unknown>
+export type HttpResponseFunction = () => APIGatewayProxyResult
 
 const getBadRequestResponse: HttpResponseFunction = getApiGatewayResponse(
     HttpStatusCodes.BAD_REQUEST
@@ -60,7 +62,7 @@ const getOkResponse = (body?: ParsableObject): HttpResponseFunction => () =>
 const getInternalServerResponse = (error?: Error): HttpResponseFunction => () =>
     getApiGatewayResponse(HttpStatusCodes.INTERNAL_SERVER_ERROR)(error)
 
-export type GetSignedUrlFunction = (key: string) => Promise<string>;
+export type GetSignedUrlFunction = (key: string) => Promise<string>
 
 export const getSignedUrls = (
     execute: GetSignedUrlFunction,
@@ -69,7 +71,7 @@ export const getSignedUrls = (
 
 export type GetDetectedTextFunction = (
   url: string
-) => Promise<TextDetectionResponse>;
+) => Promise<TextDetectionResponse>
 
 export const getLanguageCodes = async (
     execute: GetDetectedTextFunction,
@@ -94,6 +96,7 @@ export const parseTextResponse = (
 
     return languageCode === 'und' ? null : languageCode
 }
+
 export const s3Execute = (key: string): Promise<string> =>
     s3.getSignedUrlPromise('getObject', {
         Key: key,
