@@ -23,6 +23,7 @@ provider:
               - ''
               - - "arn:aws:s3:::"
                 - ${env:S3_BUCKET}
+                - "/*"
 
 functions:
   getLanguage:
