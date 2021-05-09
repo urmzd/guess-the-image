@@ -36,10 +36,11 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     const s3UrlsRequest = keys?.map((key) =>
       s3.getSignedUrlPromise('getObject', {
         Key: key,
-        Bucket: process.env.BUCKET,
+        Bucket: process.env.S3_BUCKET,
       }),
     );
     const s3UrlsResponse = await Promise.all(s3UrlsRequest);
+    console.log(s3UrlsResponse);
 
     const languageCodesRequest = s3UrlsResponse?.map((url) =>
       imageAnnotatorClient.textDetection(url),

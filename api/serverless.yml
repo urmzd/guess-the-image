@@ -12,13 +12,25 @@ provider:
   apiGateway:
     apiKeys:
       - amplifyKey
+  iam:
+    role:
+      statements:
+        - Effect: 'Allow'
+          Action:
+            - 's3:GetObject'
+          Resource:
+            - !Join
+            - ''
+            - - "arn:aws:s3:::"
+              - ${env:S3_BUCKET}
 
 functions:
   getLanguage:
     handler: src/get-language.handler
+    
     environment:
       GOOGLE_APPLICATION_CREDENTIALS: "./google-service-credentials.json"
-      BUCKET: ${env:BUCKET}
+      BUCKET: ${env:S3_BUCKET}
     events:
       - http:
           path: language
