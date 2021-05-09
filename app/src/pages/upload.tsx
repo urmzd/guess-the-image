@@ -1,109 +1,19 @@
-import React, { useRef, useEffect, useState, ChangeEvent } from 'react'
-import {
-    Grid,
-    Paper,
-    TextField,
-    Fade,
-    Button,
-    CircularProgress,
-} from '@material-ui/core'
-import { Alert } from '@material-ui/lab'
-import { PageContainer, PageLocations, StyleTransitions } from './index'
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
+import { Button, CircularProgress, Fade, Grid } from '@material-ui/core'
 import { navigate } from 'gatsby'
 import config from '../aws-exports'
-import Amplify, { Storage, API, graphqlOperation } from 'aws-amplify'
-import { GraphQLResult } from '../../node_modules/@aws-amplify/api-graphql/lib-esm/types'
+import Amplify, { API, graphqlOperation, Storage } from 'aws-amplify'
 import { nanoid } from 'nanoid'
 import { getLanguageCode } from '../utils/http-api-utils'
 import { LanguageCodeOrNull } from 'types'
 import * as mutations from '../graphql/mutations'
+import { ImageCard, PageContainer  } from '../components'
+import { PageLocations, GraphQLResult } from '../common'
 import '../styles/index.css'
 
 Amplify.configure({ ...config })
 
-const imageCardStyle = {
-    width: 500,
-    transition: StyleTransitions.DEFAULT,
-}
-
-const imageCardImageStyle = (src: string) => ({
-    overflow: 'auto',
-    backgroundImage: `url(${src})`,
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center',
-    width: 500,
-    height: 500,
-    transition: StyleTransitions.DEFAULT,
-})
-
 export type HintChangeFunction = (index: number, hint: string) => void;
-
-type ImageCardProps = {
-  mediaList: ImageCardMediaList;
-  index: number;
-  onHintChange: HintChangeFunction;
-  onBack: () => void;
-  onNext: () => void;
-  onComplete?: () => void;
-};
-
-const ImageCard = ({
-    mediaList,
-    index,
-    onBack,
-    onNext,
-    onComplete,
-    onHintChange,
-}: ImageCardProps) => (
-    <Paper elevation={12} variant="outlined" style={imageCardStyle}>
-        <Grid container>
-            {!mediaList[index].languageCode && (
-                <Grid item xs={12}>
-                    <Fade in={!mediaList[index].languageCode}>
-                        <Alert severity="warning">
-                            {
-                                'Since picture does not have picture. It will not be displayed in game.'
-                            }
-                        </Alert>
-                    </Fade>
-                </Grid>
-            )}
-            <Grid item xs={12} style={imageCardImageStyle(mediaList[index].url)} />
-            <Grid container item xs={12} style={{ padding: 12 }} spacing={3}>
-                {mediaList[index].languageCode && (
-                    <Grid item xs={12}>
-                        <TextField
-                            onChange={(event) => onHintChange(index, event.target.value)}
-                            value={mediaList[index].hint ?? ''}
-                            placeholder="Enter a hint..."
-                            fullWidth
-                        />
-                    </Grid>
-                )}
-                <Grid item container xs={12} spacing={2}>
-                    <Grid item>
-                        <Button onClick={onBack} disabled={index === 0}>
-                            {'BACK'}
-                        </Button>
-                    </Grid>
-                    <Grid item>
-                        <Button
-                            variant="contained"
-                            disabled={index === mediaList.length - 1}
-                            onClick={onNext}
-                        >
-                            {'NEXT'}
-                        </Button>
-                    </Grid>
-                    <Grid item onClick={onComplete}>
-                        <Button variant="contained">COMPLETE</Button>
-                    </Grid>
-                </Grid>
-            </Grid>
-        </Grid>
-    </Paper>
-)
 
 export enum ImageExtensions {
   JPEG = 'jpeg',
@@ -196,7 +106,6 @@ const uploadImages = async (files: FileList) => {
     } catch (error) {
     // TODO: add different error states.
     // TODO: show different error messages based on error type.
-        console.error(error)
         throw new Error(error)
     }
 }
@@ -225,7 +134,7 @@ const storeImageMetaData = async (mediaList: ImageCardMediaList) => {
 const UploadPage = (): JSX.Element => {
     const inputRef = useRef(null)
     const [files, setFiles] = useState<FileList>()
-    const [images, setImages] = useState<MediaList>()
+    const [images, setImages] = useState<ImageCardMediaList>()
     const [imageIndex, setImageIndex] = useState<number>(0)
     const [uploadStatus, setUploadStatus] = useState<AsyncStatuses>()
     const [storeDataStatus, setStoreDataStatus] = useState<AsyncStatuses>()

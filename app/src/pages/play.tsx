@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 
-const PlayPage = () => <div />;
-export default PlayPage;
+const PlayPage = () => <div />
+export default PlayPage

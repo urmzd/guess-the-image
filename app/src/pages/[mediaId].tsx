@@ -5,7 +5,7 @@ import { GraphQLResult } from '../../node_modules/@aws-amplify/api-graphql/lib-e
 import * as queries from '../graphql/queries'
 import { CircularProgress, Grid, Paper } from '@material-ui/core'
 import config from '../aws-exports'
-import { PageContainer } from '.'
+import { PageContainer } from '../components/page-container'
 
 Amplify.configure({ ...config })
 

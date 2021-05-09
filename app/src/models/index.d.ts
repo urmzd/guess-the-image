@@ -1,6 +1,8 @@
-import { ModelInit, MutableModel, PersistentModelConstructor } from "@aws-amplify/datastore";
-
-
+import {
+    ModelInit,
+    MutableModel,
+    PersistentModelConstructor,
+} from '@aws-amplify/datastore'
 
 export declare class S3Object {
   readonly key: string;
@@ -15,5 +17,8 @@ export declare class Media {
   readonly language: string;
   readonly media: S3Object;
   constructor(init: ModelInit<Media>);
-  static copyOf(source: Media, mutator: (draft: MutableModel<Media>) => MutableModel<Media> | void): Media;
+  static copyOf(
+    source: Media,
+    mutator: (draft: MutableModel<Media>) => MutableModel<Media> | void
+  ): Media;
 }
