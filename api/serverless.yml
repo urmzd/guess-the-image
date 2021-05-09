@@ -31,7 +31,7 @@ functions:
     
     environment:
       GOOGLE_APPLICATION_CREDENTIALS: "./google-service-credentials.json"
-      BUCKET: ${env:S3_BUCKET}
+      S3_BUCKET: ${env:S3_BUCKET}
     events:
       - http:
           path: language
