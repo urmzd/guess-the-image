@@ -12,7 +12,10 @@
   "devDependencies": {
     "@types/aws-lambda": "^8.10.76",
     "@types/aws-sdk": "^2.7.0",
-    "eslint": "^7.25.0",
+    "@typescript-eslint/eslint-plugin": "^4.22.1",
+    "@typescript-eslint/parser": "^4.22.1",
+    "eslint": "^7.26.0",
+    "eslint-config-google": "^0.14.0",
     "prettier": "^2.2.1",
     "serverless": "^2.40.0",
     "serverless-offline": "^7.0.0",

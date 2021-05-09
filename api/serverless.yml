@@ -18,6 +18,7 @@ functions:
     handler: src/get-language.handler
     environment:
       GOOGLE_APPLICATION_CREDENTIALS: "./google-service-credentials.json"
+      BUCKET: ${env:BUCKET}
     events:
       - http:
           path: language
@@ -28,6 +29,8 @@ functions:
             parameters:
               querystrings:
                 uri: false
+
+useDotenv: true
 
 plugins:
   - serverless-offline
