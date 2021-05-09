@@ -1,34 +1,34 @@
-import React, { useReducer } from "react";
-import { navigate } from "gatsby";
+import React, { useReducer } from 'react'
+import { navigate } from 'gatsby'
 import {
-  Typography,
-  Grid,
-  IconButton,
-  GridProps,
-  Fade,
-} from "@material-ui/core";
-import { CloudUpload, PlayCircleFilled } from "@material-ui/icons";
-import "../styles/index.css";
+    Typography,
+    Grid,
+    IconButton,
+    GridProps,
+    Fade,
+} from '@material-ui/core'
+import { CloudUpload, PlayCircleFilled } from '@material-ui/icons'
+import '../styles/index.css'
 
 enum SubContainerActionTypes {
-  INCREMENT = "increment",
+  INCREMENT = 'increment',
 }
 
 export enum PageLocations {
-  INDEX = "/",
-  PLAY = "/play",
-  UPLOAD = "/upload",
+  INDEX = '/',
+  PLAY = '/play',
+  UPLOAD = '/upload',
 }
 
-enum StyleTransitions {
-  DEFAULT = "all ease-in-out 750ms",
+export enum StyleTransitions {
+  DEFAULT = 'all ease-in-out 750ms',
 }
 
 enum Colours {
-  TRANSPARENT = "transparent",
-  SHOPIFY_GREEN = "#96bf48",
-  WHITE = "#fff",
-  BLACK = "#000",
+  TRANSPARENT = 'transparent',
+  SHOPIFY_GREEN = '#96bf48',
+  WHITE = '#fff',
+  BLACK = '#000',
 }
 
 enum UIEventStates {
@@ -64,112 +64,112 @@ type IndexPageSubContainerWrapperProps = {
 
 type CustomIconButtonProps = Pick<
   IndexPageSubContainerWrapperProps,
-  "children" | "eventState"
+  'children' | 'eventState'
 >;
 
 export const PageContainerStyle = {
-  minHeight: "100vh",
-  minWidth: "100vw",
-};
+    minHeight: '100vh',
+    minWidth: '100vw',
+}
 
 const CustomIconButtonStyles = (eventState?: UIEventStates) => ({
-  color: eventState > UIEventStates.DEFAULT ? Colours.WHITE : Colours.BLACK,
-  fontSize: "3rem",
-  transition: StyleTransitions.DEFAULT,
-});
+    color: eventState > UIEventStates.DEFAULT ? Colours.WHITE : Colours.BLACK,
+    fontSize: '3rem',
+    transition: StyleTransitions.DEFAULT,
+})
 
 const SubContainerLabelStyles = {
-  transition: StyleTransitions.DEFAULT,
-  color: Colours.WHITE,
-};
+    transition: StyleTransitions.DEFAULT,
+    color: Colours.WHITE,
+}
 
 const SubContainerStyles = (eventState: UIEventStates) => ({
-  height: `${eventState}vh`,
-  background:
+    height: `${eventState}vh`,
+    background:
     eventState > UIEventStates.DEFAULT
-      ? Colours.SHOPIFY_GREEN
-      : Colours.TRANSPARENT,
-  opacity: `${eventState > 0 ? 1 : 0}`,
-  transition: StyleTransitions.DEFAULT,
-});
+        ? Colours.SHOPIFY_GREEN
+        : Colours.TRANSPARENT,
+    opacity: `${eventState > 0 ? 1 : 0}`,
+    transition: StyleTransitions.DEFAULT,
+})
 
 const CustomIconButton = ({ children, eventState }: CustomIconButtonProps) => (
-  <Fade in={!!eventState}>
-    <IconButton style={CustomIconButtonStyles(eventState)}>
-      {children}
-    </IconButton>
-  </Fade>
-);
+    <Fade in={!!eventState}>
+        <IconButton style={CustomIconButtonStyles(eventState)}>
+            {children}
+        </IconButton>
+    </Fade>
+)
 
 const IndexPageSubContainerWrapper = ({
-  eventState,
-  setEventState,
-  children,
-  label,
-  goTo,
+    eventState,
+    setEventState,
+    children,
+    label,
+    goTo,
 }: IndexPageSubContainerWrapperProps) => {
-  return (
-    <Grid
-      container
-      direction="column"
-      alignItems="center"
-      justify="center"
-      alignContent="center"
-      style={SubContainerStyles(eventState)}
-      onMouseEnter={() => setEventState(UIEventStates.HOVERING)}
-      onTransitionEnd={() => eventState === UIEventStates.CLICKED && goTo()}
-      onClick={() => setEventState(UIEventStates.CLICKED)}
-    >
-      <Fade in={eventState === UIEventStates.CLICKED}>
-        <>
-          <CustomIconButton eventState={eventState}>
-            {children}
-          </CustomIconButton>
-          <Grid item style={SubContainerLabelStyles}>
-            <Typography>{`PRESS TO ${label
-              .replace("/", "")
-              .toUpperCase()}`}</Typography>
-          </Grid>
-        </>
-      </Fade>
-    </Grid>
-  );
-};
+    return (
+        <Grid
+            container
+            direction="column"
+            alignItems="center"
+            justify="center"
+            alignContent="center"
+            style={SubContainerStyles(eventState)}
+            onMouseEnter={() => setEventState(UIEventStates.HOVERING)}
+            onTransitionEnd={() => eventState === UIEventStates.CLICKED && goTo()}
+            onClick={() => setEventState(UIEventStates.CLICKED)}
+        >
+            <Fade in={eventState === UIEventStates.CLICKED}>
+                <>
+                    <CustomIconButton eventState={eventState}>
+                        {children}
+                    </CustomIconButton>
+                    <Grid item style={SubContainerLabelStyles}>
+                        <Typography>{`PRESS TO ${label
+                            .replace('/', '')
+                            .toUpperCase()}`}</Typography>
+                    </Grid>
+                </>
+            </Fade>
+        </Grid>
+    )
+}
 
 const subContainerInitialState: SubContainerState = {
-  subContainers: [UIEventStates.HOVERING, 100 - UIEventStates.HOVERING],
-};
+    subContainers: [UIEventStates.HOVERING, 100 - UIEventStates.HOVERING],
+}
 
 const subContainerIncrement = (
-  index: SubContainerIndex,
-  eventState: UIEventStates
+    index: SubContainerIndex,
+    eventState: UIEventStates
 ): SubContainerAction => ({
-  type: SubContainerActionTypes.INCREMENT,
-  payload: {
-    subContainerIndex: index,
-    subContainerEventState: eventState,
-  },
-});
+    type: SubContainerActionTypes.INCREMENT,
+    payload: {
+        subContainerIndex: index,
+        subContainerEventState: eventState,
+    },
+})
 
 const subContainerReducer = (
-  state: SubContainerState,
-  {
-    type,
-    payload: { subContainerIndex, subContainerEventState },
-  }: SubContainerAction
+    state: SubContainerState,
+    {
+        type,
+        payload: { subContainerIndex, subContainerEventState },
+    }: SubContainerAction
 ) => {
-  if (type === SubContainerActionTypes.INCREMENT) {
-    return {
-      subContainers: state.subContainers.map((container, index) =>
-        index === subContainerIndex
-          ? subContainerEventState
-          : UIEventStates.CLICKED - subContainerEventState
-      ),
-    };
-  }
+    if (type === SubContainerActionTypes.INCREMENT) {
+        return {
+            subContainers: state.subContainers.map((container, index) =>
+                index === subContainerIndex
+                    ? subContainerEventState
+                    : UIEventStates.CLICKED - subContainerEventState
+            ),
+        }
+    }
 
-  return state;
-};
+    return state
+}
 
 export type PageContainerProps = {
   children: JSX.Element;
@@ -177,68 +177,68 @@ export type PageContainerProps = {
 };
 
 export const PageContainer = ({ props = {}, children }: PageContainerProps) => (
-  <Grid
-    container
-    style={PageContainerStyle}
-    alignItems="center"
-    justify="center"
-    {...props}
-  >
-    {children}
-  </Grid>
-);
+    <Grid
+        container
+        style={PageContainerStyle}
+        alignItems="center"
+        justify="center"
+        {...props}
+    >
+        {children}
+    </Grid>
+)
 
 const IndexPage = () => {
-  const [state, dispatch] = useReducer(
-    subContainerReducer,
-    subContainerInitialState
-  );
+    const [state, dispatch] = useReducer(
+        subContainerReducer,
+        subContainerInitialState
+    )
 
-  const containers: SubContainerList = [
-    {
-      index: 0,
-      eventState: state.subContainers[0],
-      setEventState: (eventState) =>
-        dispatch(subContainerIncrement(0, eventState)),
-      children: <PlayCircleFilled fontSize="inherit" />,
-      label: PageLocations.PLAY,
-      goTo: () => navigate(PageLocations.PLAY),
-    },
-    {
-      index: 1,
-      eventState: state.subContainers[1],
-      setEventState: (eventState) =>
-        dispatch(subContainerIncrement(1, eventState)),
-      children: <CloudUpload fontSize="inherit" />,
-      label: PageLocations.UPLOAD,
-      goTo: () => navigate(PageLocations.UPLOAD),
-    },
-  ];
+    const containers: SubContainerList = [
+        {
+            index: 0,
+            eventState: state.subContainers[0],
+            setEventState: (eventState) =>
+                dispatch(subContainerIncrement(0, eventState)),
+            children: <PlayCircleFilled fontSize="inherit" />,
+            label: PageLocations.PLAY,
+            goTo: () => navigate(PageLocations.PLAY),
+        },
+        {
+            index: 1,
+            eventState: state.subContainers[1],
+            setEventState: (eventState) =>
+                dispatch(subContainerIncrement(1, eventState)),
+            children: <CloudUpload fontSize="inherit" />,
+            label: PageLocations.UPLOAD,
+            goTo: () => navigate(PageLocations.UPLOAD),
+        },
+    ]
 
-  return (
-    <PageContainer
-      props={{
-        justify: "space-evenly",
-        direction: "column",
-        alignItems: "stretch",
-      }}
-    >
-      <>
-        {containers
-          .map(({ index, ...container }) => ({
-            index,
-            children: (
-              <IndexPageSubContainerWrapper {...container} index={index} />
-            ),
-          }))
-          .map(({ index, children }) => (
-            <Grid item key={index}>
-              {children}
-            </Grid>
-          ))}
-      </>
-    </PageContainer>
-  );
-};
+    return (
+        <PageContainer
+            props={{
+                justify: 'space-evenly',
+                direction: 'column',
+                alignItems: 'stretch',
+            }}
+        >
+            <>
+                {containers
+                    .map(({ index, ...container }) => ({
+                        index,
+                        children: (
+                            <IndexPageSubContainerWrapper {...container} index={index} />
+                        ),
+                    }))
+                    .map(({ index, children }) => (
+                        <Grid item key={index}>
+                            {children}
+                        </Grid>
+                    ))}
+            </>
+        </PageContainer>
+    )
+}
 
-export default IndexPage;
+export default IndexPage

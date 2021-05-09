@@ -32,12 +32,5 @@
     }
   },
   "function": {},
-  "predictions": {
-    "textIdentifier": {
-      "providerPlugin": "awscloudformation",
-      "service": "Rekognition",
-      "dependsOn": [],
-      "identifyType": "identifyText"
-    }
-  }
+  "predictions": {}
 }

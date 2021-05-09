@@ -1,121 +1,267 @@
-import React, { useRef, useEffect, useState, ChangeEvent } from "react";
-import { Grid, Paper, TextField, Fade, Button } from "@material-ui/core";
-import { Alert } from "@material-ui/lab";
-import { PageContainer, PageLocations } from "./index";
-import "../styles/index.css";
-import { navigate } from "gatsby";
-import config from "../aws-exports";
-import Amplify, { Storage } from "aws-amplify";
-import { nanoid } from "nanoid";
+import React, { useRef, useEffect, useState, ChangeEvent } from 'react'
+import {
+    Grid,
+    Paper,
+    TextField,
+    Fade,
+    Button,
+    CircularProgress,
+} from '@material-ui/core'
+import { Alert } from '@material-ui/lab'
+import { PageContainer, StyleTransitions } from './index'
+import config from '../aws-exports'
+import Amplify, { Storage } from 'aws-amplify'
+import { nanoid } from 'nanoid'
+import { getLanguageCode } from '../utils/http-api-utils'
+import { LanguageCodeOrNull } from 'types'
+import '../styles/index.css'
 
-Amplify.configure({ ...config });
-Storage.configure({ ...config });
+Amplify.configure({ ...config })
 
-const ImageCardImageStyle = (src: string) => ({
-  backgroundImage: `url(${src})`,
-  backgroundSize: "cover",
-  backgroundRepeat: "no-repeat",
-  backgroundPosition: "center",
-  aspectRatio: "16/9",
-  height: 400,
-});
+const imageCardStyle = {
+    width: 500,
+    transition: StyleTransitions.DEFAULT,
+}
 
+const imageCardImageStyle = (src: string) => ({
+    overflow: 'auto',
+    backgroundImage: `url(${src})`,
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center',
+    width: 500,
+    height: 500,
+    transition: StyleTransitions.DEFAULT,
+})
+
+export type HintChangeFunction = (index: number, hint: string) => void;
 type ImageCardProps = {
-  src: string | string[];
-  index?: number;
-  onBack?: () => void;
-  onNext?: () => void;
+  media: MediaList;
+  index: number;
+  onHintChange: HintChangeFunction;
+  onBack: () => void;
+  onNext: () => void;
   onComplete?: () => void;
 };
 
-const ImageCard = ({ src }: ImageCardProps) => (
-  <Paper elevation={12} variant="outlined">
-    <Grid container>
-      <Grid item xs={12}>
-        <Fade in={false}>
-          <Alert severity="error">Picture does not have text</Alert>
-        </Fade>
-      </Grid>
-      <Grid item xs={12} style={ImageCardImageStyle(src as string)} />
-      <Grid container item xs={12} style={{ padding: 12 }} spacing={3}>
-        <Grid item xs={12}>
-          <TextField placeholder="Enter a hint..." fullWidth variant="filled" />
+const ImageCard = ({
+    media,
+    index,
+    onBack,
+    onNext,
+    onComplete,
+    onHintChange,
+}: ImageCardProps) => (
+    <Paper elevation={12} variant="outlined" style={imageCardStyle}>
+        <Grid container>
+            {!media[index].languageCode && (
+                <Grid item xs={12}>
+                    <Fade in={!media[index].languageCode}>
+                        <Alert severity="error">Picture does not have text</Alert>
+                    </Fade>
+                </Grid>
+            )}
+            <Grid item xs={12} style={imageCardImageStyle(media[index].url)} />
+            <Grid container item xs={12} style={{ padding: 12 }} spacing={3}>
+                {media[index].languageCode && (
+                    <Grid item xs={12}>
+                        <TextField
+                            onChange={(event) => onHintChange(index, event.target.value)}
+                            value={media[index].hint ?? ''}
+                            placeholder="Enter a hint..."
+                            fullWidth
+                        />
+                    </Grid>
+                )}
+                <Grid item container xs={12} spacing={2}>
+                    <Grid item>
+                        <Button onClick={onBack} disabled={index === 0}>
+              BACK
+                        </Button>
+                    </Grid>
+                    <Grid item>
+                        <Button
+                            variant="contained"
+                            disabled={index === media.length - 1}
+                            onClick={onNext}
+                        >
+                            {'NEXT'}
+                        </Button>
+                    </Grid>
+                    <Grid item onClick={onComplete}>
+                        <Button variant="contained">COMPLETE</Button>
+                    </Grid>
+                </Grid>
+            </Grid>
         </Grid>
-        <Grid item container xs={12} spacing={2}>
-          <Grid item>
-            <Button>BACK</Button>
-          </Grid>
-          <Grid item>
-            <Button variant="contained">NEXT</Button>
-          </Grid>
-          <Grid item>
-            <Button variant="contained">COMPLETE</Button>
-          </Grid>
-        </Grid>
-      </Grid>
-    </Grid>
-  </Paper>
-);
+    </Paper>
+)
 
-export enum ImageContentTypes {
-  JPEG = "image/jpeg",
-  PNG = "image/png",
-  JPG = "image/jpg",
+export enum ImageExtensions {
+  JPEG = 'jpeg',
+  PNG = 'png',
+  JPG = 'jpg',
 }
 
-export type ImageKey = `${string}.${string}`;
+export type ImageContentTypes = `image/${ImageExtensions}`;
 
-const getImageKey = (extension: ImageContentTypes): ImageKey =>
-  `${nanoid()}.${extension.split("/").pop()}` as const;
+export enum ImagePrivacyTypes {
+  PUBLIC = 'public',
+}
 
-const UploadPage = () => {
-  const inputRef = useRef(null);
-  const [urls, setUrls] = useState<Object[]>();
+export type ImageKey<
+  RequestType extends boolean = boolean
+> = RequestType extends true
+  ? `${ImagePrivacyTypes}/${string}.${ImageExtensions}`
+  : `${string}.${ImageExtensions}`;
 
-  useEffect(() => {
-    if (inputRef) {
-      (inputRef.current as HTMLElement).click();
-    }
-  }, []);
+export type StoragePutResponse = { key: ImageKey };
 
-  const uploadHandler = async ({
-    target: { files },
-  }: ChangeEvent<HTMLInputElement>) => {
-    const filesArray = Array.from(files);
-    const fileUrlPromises = filesArray.map((file) =>
-      Storage.put(getImageKey(file.type as ImageContentTypes), file)
-    );
+export type Media = {
+  hint?: string;
+  languageCode: LanguageCodeOrNull;
+  media: {
+    key: ImageKey;
+  };
+} & { url: string; id: string };
+
+export type MediaList = Media[];
+
+export enum AsyncStatuses {
+  FULFILLED,
+  REJECTED,
+  IN_PROGRESS,
+}
+
+const getImageKey = (
+    id: string,
+    extension: ImageExtensions,
+    prefix?: ImagePrivacyTypes
+): ImageKey => {
+    const hasPrefix = !!prefix
+    const _prefix = prefix ? prefix + '/' : ''
+
+    return `${_prefix}${id}.${extension}` as ImageKey<typeof hasPrefix>
+}
+
+type ImageMeta = {
+  id: string;
+  extension: ImageExtensions;
+};
+
+type ImageMetaList = ImageMeta[];
+type FileList = File[];
+
+const getFileExtension = (file: File): ImageExtensions =>
+  file.type.split('/').pop() as ImageExtensions
+
+const uploadImages = async (files: FileList) => {
+    const imageMetas: ImageMetaList = Array(files.length)
+        .fill(0)
+        .map((_, index) => ({
+            id: nanoid(),
+            extension: getFileExtension(files[index]),
+        }))
+
+    const putFilePromises = imageMetas.map(({ id, extension }, index) =>
+        Storage.put(getImageKey(id, extension), files[index])
+    ) as Promise<StoragePutResponse>[]
 
     try {
-      setUrls(await Promise.all(fileUrlPromises));
-    } catch (error) {
-      console.log(error);
-    }
-  };
+        await Promise.all(putFilePromises)
+        const imageKeys = imageMetas.map(({ id, extension }) =>
+            getImageKey(id, extension, ImagePrivacyTypes.PUBLIC)
+        )
+        const languageCodes = await getLanguageCode(...imageKeys)
 
-  console.log(urls);
-  return (
-    <PageContainer>
-      <>
-        {/*
-         *{files?.map((file) => (
-         *  <Grid item key={file.name}>
-         *    <ImageCard src={URL.createObjectURL(file)} />
-         *  </Grid>
-         *))}
-         */}
-        <Grid item>
-          <input
-            type="file"
-            ref={inputRef}
-            style={{ display: "none" }}
-            onChange={uploadHandler}
-            multiple
-            accept={Object.values(ImageContentTypes).join(",")}
-          />
-        </Grid>
-      </>
-    </PageContainer>
-  );
-};
-export default UploadPage;
+        const medias: MediaList = languageCodes.map((languageCode, index) => ({
+            languageCode,
+            media: {
+                key: imageKeys[index],
+            },
+            url: URL.createObjectURL(files[index]),
+            id: imageMetas[index].id,
+        }))
+
+        return medias
+    } catch (error) {
+    // TODO: add different error states.
+    // TODO: show different error messages based on error type.
+        console.error(error)
+        throw new Error(error)
+    }
+}
+const storeImageMetaData = async (mediaList: MediaList) => {}
+
+const UploadPage = (): JSX.Element => {
+    const inputRef = useRef(null)
+    const [files, setFiles] = useState<FileList>()
+    const [images, setImages] = useState<MediaList>()
+    const [imageIndex, setImageIndex] = useState<number>(0)
+    const [uploadStatus, setUploadStatus] = useState<AsyncStatuses>()
+
+    const onHintChange: HintChangeFunction = (index: number, hint: string) => {
+        setImages(
+            images.map((image, imageIndex) =>
+                index === imageIndex ? { ...image, hint } : { ...image }
+            )
+        )
+    }
+
+    useEffect(() => {
+        if (uploadStatus === AsyncStatuses.IN_PROGRESS) {
+            uploadImages(files).then((data) => setImages(data))
+        }
+    }, [uploadStatus])
+
+    useEffect(() => {
+        if (inputRef) {
+            (inputRef.current as HTMLElement).click()
+        }
+    }, [])
+
+    const uploadHandler = async ({
+        target: { files },
+    }: ChangeEvent<HTMLInputElement>) => {
+        const filesArray = Array.from(files)
+        setFiles(filesArray)
+        setUploadStatus(AsyncStatuses.IN_PROGRESS)
+    }
+    const goToNextImage = () =>
+        setImageIndex(imageIndex < images.length - 1 ? imageIndex + 1 : imageIndex)
+    const goToPreviousImage = () =>
+        setImageIndex(imageIndex ? imageIndex - 1 : 0)
+
+    console.log(images)
+    return (
+        <PageContainer>
+            <>
+                {images ? (
+                    <Grid item>
+                        <ImageCard
+                            index={imageIndex}
+                            media={images}
+                            onNext={goToNextImage}
+                            onBack={goToPreviousImage}
+                            onHintChange={onHintChange}
+                            onComplete={() => console.log('hi')}
+                        />
+                    </Grid>
+                ) : (
+                    <CircularProgress />
+                )}
+                <Grid item>
+                    <input
+                        type="file"
+                        ref={inputRef}
+                        style={{ display: 'none' }}
+                        onChange={uploadHandler}
+                        multiple
+                        accept={Object.values(ImageExtensions).join(',')}
+                    />
+                </Grid>
+            </>
+        </PageContainer>
+    )
+}
+export default UploadPage

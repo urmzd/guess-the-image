@@ -26,12 +26,11 @@
         "IdentityPoolName": "shopifyimagereposito450f8e19_identitypool_450f8e19__dev",
         "UserPoolName": "shopifyimagereposito450f8e19_userpool_450f8e19"
       },
-      "lastPushTimeStamp": "2021-05-06T00:01:50.462Z",
+      "lastPushTimeStamp": "2021-05-09T03:01:11.646Z",
       "providerMetadata": {
         "s3TemplateURL": "https://s3.amazonaws.com/amplify-shopifyimagereposito-dev-233350-deployment/amplify-cfn-templates/auth/shopifyimagereposito450f8e19-cloudformation-template.yml",
         "logicalId": "authshopifyimagereposito450f8e19"
-      },
-      "lastPushDirHash": "OAgQb4wYVOVCjxInlEX3c3+dUac="
+      }
     }
   },
   "storage": {
@@ -42,12 +41,11 @@
         "BucketName": "media233350-dev",
         "Region": "us-east-1"
       },
-      "lastPushTimeStamp": "2021-05-06T00:01:50.462Z",
+      "lastPushTimeStamp": "2021-05-09T03:01:11.650Z",
       "providerMetadata": {
         "s3TemplateURL": "https://s3.amazonaws.com/amplify-shopifyimagereposito-dev-233350-deployment/amplify-cfn-templates/storage/s3-cloudformation-template.json",
         "logicalId": "storagemedia"
-      },
-      "lastPushDirHash": "zQ3HunNMpw2ENaDeaY3g8iV3TlU="
+      }
     }
   },
   "api": {
@@ -69,31 +67,14 @@
         "GraphQLAPIEndpointOutput": "https://bygsqzy2grggjojolfq5zy5jqu.appsync-api.us-east-1.amazonaws.com/graphql",
         "GraphQLAPIKeyOutput": "da2-5apnilcplndh5m5mtnc7pid4ne"
       },
-      "lastPushTimeStamp": "2021-05-06T00:01:50.462Z",
+      "lastPushTimeStamp": "2021-05-09T03:01:11.656Z",
       "providerMetadata": {
         "s3TemplateURL": "https://s3.amazonaws.com/amplify-shopifyimagereposito-dev-233350-deployment/amplify-cfn-templates/api/cloudformation-template.json",
         "logicalId": "apishopifyimagereposito"
       },
-      "lastPushDirHash": "JxjrnfWvq93jP3qZNia5oqrXsT8="
+      "lastPushDirHash": "46zFoL65BHthxL46B4kz0xUBQSo="
     }
   },
   "function": {},
-  "predictions": {
-    "textIdentifier": {
-      "providerPlugin": "awscloudformation",
-      "service": "Rekognition",
-      "dependsOn": [],
-      "identifyType": "identifyText",
-      "output": {
-        "format": "PLAIN",
-        "region": "us-east-1"
-      },
-      "lastPushTimeStamp": "2021-05-06T00:01:50.462Z",
-      "providerMetadata": {
-        "s3TemplateURL": "https://s3.amazonaws.com/amplify-shopifyimagereposito-dev-233350-deployment/amplify-cfn-templates/predictions/textIdentifier-template.json",
-        "logicalId": "predictionstextIdentifier"
-      },
-      "lastPushDirHash": "4KRs0NtJq0ZPpCITOghUFtx19BU="
-    }
-  }
+  "predictions": {}
 }
