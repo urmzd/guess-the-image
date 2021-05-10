@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { ImageCardMedia } from '../upload'
+import { ImageCardMedia } from './upload'
 import Amplify, { API, Storage, graphqlOperation } from 'aws-amplify'
-import * as queries from '../../graphql/queries'
+import * as queries from '../graphql/queries'
 import { navigate } from 'gatsby'
 import { CircularProgress, Grid, Paper } from '@material-ui/core'
-import config from '../../aws-exports'
-import { PageContainer } from '../../components'
-import { PageLocations, GraphQLResult } from '../../common'
+import config from '../aws-exports'
+import { PageContainer } from '../components'
+import { PageLocations, GraphQLResult } from '../common'
 
-Amplify.configure({ ...config })
+Amplify.configure({ ...config, ssr: true })
 
 export type ImagePageProps = { mediaId: string };
 
@@ -32,13 +32,19 @@ const getMediaById = async (id: string): Promise<ImageCardMedia> => {
     }
 }
 
-const ImagePage = ({ mediaId }: ImagePageProps): JSX.Element => {
+const ImagePage = ({ mediaId, ...rest }: ImagePageProps): JSX.Element => {
+    console.log(rest)
     const [media, setMedia] = useState<ImageCardMedia>()
 
     useEffect(() => {
-        getMediaById(mediaId)
-            .then((data) => setMedia(data))
-            .catch(() => navigate(PageLocations.NOT_FOUND))
+        if (mediaId) {
+            getMediaById(mediaId)
+                .then((data) => setMedia(data))
+                .catch((err) => {
+                    console.log(err)
+                    navigate(PageLocations.NOT_FOUND)
+                })
+        }
     }, [])
 
     return (
