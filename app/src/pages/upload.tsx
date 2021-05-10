@@ -15,6 +15,7 @@ import { LanguageCodeOrNull } from 'types'
 import * as mutations from '../graphql/mutations'
 import { ImageCard, PageContainer } from '../components'
 import { PageLocations, GraphQLResult } from '../common'
+import { Blob } from 'blob-polyfill'
 import '../styles/index.css'
 
 Amplify.configure({ ...config })
