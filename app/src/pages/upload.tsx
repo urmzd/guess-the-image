@@ -110,8 +110,6 @@ const uploadImages = async (files: FileList) => {
 
         return medias
     } catch (error) {
-    // TODO: add different error states.
-    // TODO: show different error messages based on error type.
         throw new Error(error)
     }
 }

@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react'
-import { ImageCardMedia } from './upload'
+import { ImageCardMedia } from '../upload'
 import Amplify, { API, Storage, graphqlOperation } from 'aws-amplify'
-import * as queries from '../graphql/queries'
+import * as queries from '../../graphql/queries'
 import { navigate } from 'gatsby'
 import { CircularProgress, Grid, Paper } from '@material-ui/core'
-import config from '../aws-exports'
-import { PageContainer } from '../components/page-container'
-import { GraphQLResult } from '../common/types'
-import { PageLocations } from '../common'
+import config from '../../aws-exports'
+import { PageContainer } from '../../components'
+import { PageLocations, GraphQLResult } from '../../common'
 
 Amplify.configure({ ...config })
+
+export type ImagePageProps = { mediaId: string };
 
 const getMediaById = async (id: string): Promise<ImageCardMedia> => {
     try {
@@ -31,7 +32,6 @@ const getMediaById = async (id: string): Promise<ImageCardMedia> => {
     }
 }
 
-export type ImagePageProps = { mediaId: string };
 const ImagePage = ({ mediaId }: ImagePageProps): JSX.Element => {
     const [media, setMedia] = useState<ImageCardMedia>()
 
