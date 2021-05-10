@@ -13,7 +13,7 @@ Guess the language...
 - Upload pictures using the opened File browser
 - Add hints (if text detected) to help individuals guess the language (or press next)
 - Press complete to trigger upload of meta-data and to retrieve ids
-- View image by adding the id as a path parameter to the images directory. If id = 1, url = shopify.urmzd.com/images/1
+- View image by adding the id as a path parameter to the root directory. If id = 1, url = shopify.urmzd.com/1
 
 ## Notes / TO DO:
 
