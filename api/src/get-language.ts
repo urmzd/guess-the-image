@@ -1,7 +1,6 @@
 import { ImageAnnotatorClient, protos } from '@google-cloud/vision'
 import {
     ALBEventMultiValueQueryStringParameters,
-    APIGatewayProxyEvent,
     APIGatewayProxyHandler,
     APIGatewayProxyResult,
 } from 'aws-lambda'
@@ -45,23 +44,27 @@ export const getQueryStrings = <
     QueryStringType extends Record<string, unknown>
 >(event: {
     multiValueQueryStringParameters: ALBEventMultiValueQueryStringParameters
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [name: string]: any
 }): QueryStringType =>
-        event?.multiValueQueryStringParameters
+        event.multiValueQueryStringParameters
             ? (event.multiValueQueryStringParameters as QueryStringType)
             : undefined
 
 export type ParsableObject = Record<string, unknown>
 export type HttpResponseFunction = () => APIGatewayProxyResult
 
-const getBadRequestResponse: HttpResponseFunction = getApiGatewayResponse(
+export const getBadRequestResponse: HttpResponseFunction = getApiGatewayResponse(
     HttpStatusCodes.BAD_REQUEST
 )
 
-const getOkResponse = (body?: ParsableObject): HttpResponseFunction => () =>
-    getApiGatewayResponse(HttpStatusCodes.OK)(body)
+export const getOkResponse = (
+    body?: ParsableObject
+): HttpResponseFunction => () => getApiGatewayResponse(HttpStatusCodes.OK)(body)
 
-const getInternalServerResponse = (error?: Error): HttpResponseFunction => () =>
+export const getInternalServerResponse = (
+    error?: Error
+): HttpResponseFunction => () =>
     getApiGatewayResponse(HttpStatusCodes.INTERNAL_SERVER_ERROR)(error)
 
 export type GetSignedUrlFunction = (key: string) => Promise<string>
@@ -99,17 +102,19 @@ export const parseTextResponse = (
     return languageCode === 'und' ? null : languageCode
 }
 
-export const s3Execute = (key: string): Promise<string> =>
-    s3.getSignedUrlPromise('getObject', {
+export const s3Execute = (key: string, client: S3 = s3): Promise<string> =>
+    client.getSignedUrlPromise('getObject', {
         Key: key,
         Bucket: process.env.S3_BUCKET,
     })
 
-export const visionExecute = (url: string): Promise<TextDetectionResponse> =>
-    imageAnnotatorClient.textDetection(url)
+export const visionExecute = (
+    url: string,
+    client: ImageAnnotatorClient = imageAnnotatorClient
+): Promise<TextDetectionResponse> => client.textDetection(url)
 
 export const getResponse = async (
-    queryStrings: GetLanguageQueryParameters
+    queryStrings?: GetLanguageQueryParameters
 ): Promise<HttpResponseFunction> => {
     if (!queryStrings) {
         return getBadRequestResponse
