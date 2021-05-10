@@ -277,7 +277,6 @@ const UploadPage = (): JSX.Element => {
                 <Grid item>
                     <DownloadLink
                         data={images?.map(({ media: { key } }) => key.split('/').pop())}
-                        fileName={'imageIds.json'}
                         ref={downloadRef}
                     />
                 </Grid>

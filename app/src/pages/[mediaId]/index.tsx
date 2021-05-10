@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { AsyncStatuses, ImageCardMedia } from './upload'
+import { AsyncStatuses, ImageCardMedia } from '../upload'
 import Amplify, { API, Storage, graphqlOperation } from 'aws-amplify'
-import { GraphQLResult } from '../../node_modules/@aws-amplify/api-graphql/lib-esm/types'
-import * as queries from '../graphql/queries'
+import * as queries from '../../graphql/queries'
 import { CircularProgress, Grid, Paper } from '@material-ui/core'
-import config from '../aws-exports'
-import { PageContainer } from '../components/page-container'
+import config from '../../aws-exports'
+import { PageContainer } from '../../components/page-container'
+import { GraphQLResult } from '../../common/types'
 
 Amplify.configure({ ...config })
 
