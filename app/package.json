@@ -22,6 +22,7 @@
     "blob-polyfill": "^5.0.20210201",
     "file-saver": "^2.0.5",
     "gatsby": "^3.0.0",
+    "gatsby-plugin-sitemap": "^4.0.0",
     "graphql": "^15.5.0",
     "nanoid": "^3.1.22",
     "prettier": "^2.2.1",
