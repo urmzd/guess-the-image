@@ -275,10 +275,7 @@ const UploadPage = (): JSX.Element => {
                     />
                 </Grid>
                 <Grid item>
-                    <DownloadLink
-                        data={images?.map(({ media: { key } }) => key.split('/').pop())}
-                        ref={downloadRef}
-                    />
+                    <DownloadLink data={images?.map(({ id }) => id)} ref={downloadRef} />
                 </Grid>
             </>
         </PageContainer>
