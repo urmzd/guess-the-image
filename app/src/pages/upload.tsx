@@ -153,7 +153,7 @@ export const DownloadLink = React.forwardRef(
         return (
             <a
                 href={URL.createObjectURL(blob)}
-                download={fileName ? fileName : 'file.json'}
+                download={fileName ? fileName : 'file.txt'}
                 style={{ display: show ? 'inline-block' : 'none' }}
                 ref={ref}
             />
