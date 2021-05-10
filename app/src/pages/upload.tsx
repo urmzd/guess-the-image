@@ -15,6 +15,7 @@ import { LanguageCodeOrNull } from 'types'
 import * as mutations from '../graphql/mutations'
 import { ImageCard, PageContainer } from '../components'
 import { PageLocations, GraphQLResult } from '../common'
+import { Blob } from 'blob-polyfill'
 import '../styles/index.css'
 
 Amplify.configure({ ...config })
@@ -33,11 +34,10 @@ export enum ImagePrivacyTypes {
   PUBLIC = 'public',
 }
 
-export type ImageKey<
-  RequestType extends boolean = boolean
-> = RequestType extends true
-  ? `${ImagePrivacyTypes}/${string}.${ImageExtensions}`
-  : `${string}.${ImageExtensions}`;
+export type ImageKey<RequestType extends boolean = boolean> =
+  RequestType extends true
+    ? `${ImagePrivacyTypes}/${string}.${ImageExtensions}`
+    : `${string}.${ImageExtensions}`;
 
 export type StoragePutResponse = { key: ImageKey };
 
@@ -138,24 +138,27 @@ const storeImageMetaData = async (mediaList: ImageCardMediaList) => {
 }
 
 export type DownloadLinkProps = {
-  fileName?: `${string}.json`;
-  data?: Record<string, unknown> | Record<string, unknown>[] | unknown[];
+  fileName?: `${string}.txt`;
+  data?: unknown[];
   show?: boolean;
 };
 export const DownloadLink = React.forwardRef(
     (
         { data, show, fileName }: DownloadLinkProps,
         ref: LegacyRef<HTMLAnchorElement>
-    ): JSX.Element => (
-        <a
-            href={URL.createObjectURL(
-                new Blob([JSON.stringify(data ?? {})], { type: 'application/json' })
-            )}
-            style={{ display: show ? 'inline-block' : 'none' }}
-            download={fileName ? fileName : 'file.json'}
-            ref={ref}
-        />
-    )
+    ): JSX.Element => {
+        const blob = new Blob([data?.join('\n') ?? ''], {
+            type: 'text/plain',
+        })
+        return (
+            <a
+                href={URL.createObjectURL(blob)}
+                download={fileName ? fileName : 'file.json'}
+                style={{ display: show ? 'inline-block' : 'none' }}
+                ref={ref}
+            />
+        )
+    }
 )
 
 const UploadPage = (): JSX.Element => {
@@ -186,8 +189,12 @@ const UploadPage = (): JSX.Element => {
         }
 
         if (storeDataStatus === AsyncStatuses.FULFILLED) {
-            downloadRef.current.click()
-            navigate(PageLocations.PLAY)
+            const download = async () => {
+                downloadRef.current.click()
+                await navigate(PageLocations.PLAY)
+            }
+
+            download()
         }
     })
 
@@ -222,7 +229,6 @@ const UploadPage = (): JSX.Element => {
     const completeProcess = () => setStoreDataStatus(AsyncStatuses.IN_PROGRESS)
 
     const triggerUpload = () => inputRef.current.click()
-    console.log(downloadRef)
 
     return (
         <PageContainer>
