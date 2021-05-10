@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { ImageCardMedia } from '../upload'
+import { ImageCardMedia } from './upload'
 import Amplify, { API, Storage, graphqlOperation } from 'aws-amplify'
-import * as queries from '../../graphql/queries'
+import * as queries from '../graphql/queries'
 import { navigate } from 'gatsby'
 import { CircularProgress, Grid, Paper } from '@material-ui/core'
-import config from '../../aws-exports'
-import { PageContainer } from '../../components'
-import { PageLocations, GraphQLResult } from '../../common'
+import config from '../aws-exports'
+import { PageContainer } from '../components'
+import { PageLocations, GraphQLResult } from '../common'
 
 Amplify.configure({ ...config, ssr: true })
 
@@ -40,9 +40,8 @@ const ImagePage = ({ mediaId, ...rest }: ImagePageProps): JSX.Element => {
         if (mediaId) {
             getMediaById(mediaId)
                 .then((data) => setMedia(data))
-                .catch((err) => {
-                    console.log(err)
-                    navigate(PageLocations.NOT_FOUND)
+                .catch(async () => {
+                    await navigate(PageLocations.NOT_FOUND)
                 })
         }
     }, [])
@@ -52,11 +51,16 @@ const ImagePage = ({ mediaId, ...rest }: ImagePageProps): JSX.Element => {
             <Grid item>
                 {media ? (
                     <Paper elevation={12}>
-                        <img
-                            src={media.url}
-                            height={500}
-                            width={500}
-                            style={{ padding: 12 }}
+                        <div
+                            style={{
+                                backgroundImage: `url(${media.url})`,
+                                backgroundPosition: 'center',
+                                backgroundSize: 'cover',
+                                backgroundRepeat: 'no-repeat',
+                                width: 500,
+                                height: 500,
+                                padding: 12,
+                            }}
                         />
                     </Paper>
                 ) : (
