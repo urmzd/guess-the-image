@@ -28,10 +28,10 @@ Guess the language...
 
 ## Commit Labels:
 
-- [f]: Fix
-- [i]: Implement
-- [r]: Refactor
-- [t]: Test
+- `[F]` -> Fix
+- `[I]` -> Implement
+- `[R]` -> Refactor
+- `[T]` -> Test
 
 ## Front End Stack
 
