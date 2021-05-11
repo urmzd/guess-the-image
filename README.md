@@ -6,7 +6,7 @@
 
 Guess the language...
 
-## How To:
+## How To Use:
 
 - Visit [website](https://shopify.urmzd.com)
 - Hover over to "upload", "play" is incomplete.
@@ -14,6 +14,12 @@ Guess the language...
 - Add hints (if text detected) to help individuals guess the language (or press next)
 - Press complete to trigger upload of meta-data and to retrieve ids
 - View image by adding substituing id into the following url; https://shopify.urmzd.com/:id
+
+## How To Test:
+
+- Navigate to /api
+- Run `npm install`
+- Run `npm run test`
 
 ## Notes / TO DO:
 

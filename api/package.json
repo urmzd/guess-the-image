@@ -1,37 +1,37 @@
 {
-  "name": "api",
-  "version": "1.0.0",
-  "description": "",
-  "main": "handler.js",
-  "dependencies": {
-    "@google-cloud/vision": "^2.3.1",
-    "aws-lambda": "^1.0.6",
-    "aws-sdk": "^2.901.0",
-    "types": "file:../types"
-  },
-  "devDependencies": {
-    "@types/aws-lambda": "^8.10.76",
-    "@types/aws-sdk": "^2.7.0",
-    "@types/jest": "^26.0.23",
-    "@typescript-eslint/eslint-plugin": "^4.22.1",
-    "@typescript-eslint/parser": "^4.22.1",
-    "eslint": "^7.26.0",
-    "eslint-config-google": "^0.14.0",
-    "eslint-config-prettier": "^8.3.0",
-    "jest": "^26.6.3",
-    "prettier": "^2.2.1",
-    "serverless": "^2.40.0",
-    "serverless-offline": "^7.0.0",
-    "serverless-plugin-typescript": "^1.1.9",
-    "test-jest": "^1.0.1",
-    "ts-jest": "^26.5.6",
-    "typescript": "^4.2.4"
-  },
-  "scripts": {
-    "start": "sls offline",
-    "deploy": "sls deploy --conceal",
-    "test": "jest"
-  },
-  "author": "Urmzd Mukhammadnaim",
-  "license": "ISC"
+    "name": "api",
+    "version": "1.0.0",
+    "description": "",
+    "main": "handler.js",
+    "dependencies": {
+        "@google-cloud/vision": "^2.3.1",
+        "aws-lambda": "^1.0.6",
+        "aws-sdk": "^2.901.0",
+        "types": "file:../types"
+    },
+    "devDependencies": {
+        "@types/aws-lambda": "^8.10.76",
+        "@types/aws-sdk": "^2.7.0",
+        "@types/jest": "^26.0.23",
+        "@typescript-eslint/eslint-plugin": "^4.22.1",
+        "@typescript-eslint/parser": "^4.22.1",
+        "eslint": "^7.26.0",
+        "eslint-config-google": "^0.14.0",
+        "eslint-config-prettier": "^8.3.0",
+        "jest": "^26.6.3",
+        "prettier": "^2.2.1",
+        "serverless": "^2.40.0",
+        "serverless-offline": "^7.0.0",
+        "serverless-plugin-typescript": "^1.1.9",
+        "test-jest": "^1.0.1",
+        "ts-jest": "^26.5.6",
+        "typescript": "^4.2.4"
+    },
+    "scripts": {
+        "start": "sls offline",
+        "deploy": "sls deploy --conceal",
+        "test": "jest --coverage"
+    },
+    "author": "Urmzd Mukhammadnaim",
+    "license": "ISC"
 }
