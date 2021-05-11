@@ -2,8 +2,6 @@
 
 ## Image Repository Submission
 
-## Summary
-
 Guess the language...
 
 ## How To Use:
@@ -17,35 +15,31 @@ Guess the language...
 
 ## How To Test:
 
-- Navigate to /api
+- Navigate to `/api`
 - Run `npm install`
 - Run `npm run test`
 
-## Notes / TO DO:
+## To Do:
 
-- [] Add unit tests to front-end
-- [] Ensure 100% coverage in back-end code
-- [] Allow users to guess language associated with picture
-- [] Add leaderboard
+- [ ] Add unit tests to front-end
+- [ ] Ensure 100% coverage in back-end code
+- [ ] Allow users to guess language associated with picture
+- [ ] Add leaderboard
 
 ## Commit Labels:
 
-- "[F]": Fix
-- "[I]": Implement
-- "[R]": Refactor
-- "[T]": Test
+- [f]: Fix
+- [i]: Implement
+- [r]: Refactor
+- [t]: Test
 
-## Front End
-
-### Stack:
+## Front End Stack
 
 - Gatsby
 - Amplify
 - GraphQL
 
-## Back End
-
-### Stack:
+## Back End Stack
 
 - AppSync
 - Lambda
