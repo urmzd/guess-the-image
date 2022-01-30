@@ -1,8 +1,7 @@
 {
-  "name": "shopify-image-repository",
+  "name": "guess-the-image",
   "version": "1.0.0",
   "private": true,
-  "description": "Fall 2021 Internship Challenge",
   "author": "Urmzd",
   "keywords": [
     "gatsby"
